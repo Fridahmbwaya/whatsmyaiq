@@ -830,7 +830,7 @@ export default function WhatsmyAIQ() {
                   <div style={{marginTop:"16px"}}>
                     <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"2.2rem",fontWeight:900,color:"#1A1A1A"}}>$24.99</div>
                     <div style={{fontSize:".72rem",color:"#BDBDBD",marginBottom:"12px"}}>One-time · Instant access · No subscription</div>
-                    <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={unlockReport}>Unlock My Full Report →</button>
+                 <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={() => window.open('https://buy.stripe.com/cNi8wQ7Vx5WD4V52Yh8g000', '_blank')}>Unlock My Full Report →</button>
                   </div>
                 </div>
                 <p style={{textAlign:"center",fontSize:".7rem",color:"#BDBDBD"}}>🔒 Secure · Instant delivery · 7-day guarantee</p>
