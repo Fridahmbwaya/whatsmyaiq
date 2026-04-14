@@ -447,23 +447,23 @@ export default function WhatsmyAIQ() {
     .fu5{animation:fadeUp .4s .28s ease forwards;opacity:0;}
     .fu6{animation:fadeUp .4s .35s ease forwards;opacity:0;}
 
-    .dark-screen{background:#060608;color:#E8E8F0;min-height:100vh;}
+    .dark-screen{background:#0D0F14;color:#E8E8F0;min-height:100vh;}
     .light-screen{background:#FAFAF7;color:#1A1A1A;min-height:100vh;}
 
     .audience-btn{display:flex;align-items:center;gap:14px;width:100%;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .15s;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:10px;color:#E8E8F0;}
-    .audience-btn:hover{background:rgba(255,255,255,.055);border-color:rgba(255,68,68,.35);transform:translateX(4px);}
+    .audience-btn:hover{background:rgba(255,255,255,.055);border-color:rgba(0,212,255,.35);transform:translateX(4px);}
 
     .opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 17px;margin-bottom:8px;color:rgba(215,215,230,.62);font-size:.91rem;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1.4;}
     .opt:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:#fff;transform:translateX(3px);}
-    .opt.sel{background:rgba(255,68,68,.09);border-color:rgba(255,68,68,.42);color:#FF5555;}
+    .opt.sel{background:rgba(0,212,255,.09);border-color:rgba(0,212,255,.42);color:#FF5555;}
 
     .next-dark{width:100%;padding:14px;border-radius:8px;border:none;font-weight:800;font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;margin-top:5px;cursor:pointer;transition:all .15s;}
-    .next-dark.on{background:#FF4444;color:#fff;}
-    .next-dark.on:hover{background:#ff2020;transform:translateY(-1px);}
+    .next-dark.on{background:#00D4FF;color:#fff;}
+    .next-dark.on:hover{background:#00AACC;transform:translateY(-1px);}
     .next-dark.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.16);cursor:not-allowed;}
 
-    .cta-dark{background:#FF4444;color:#fff;border:none;border-radius:8px;padding:16px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
-    .cta-dark:hover{background:#ff2020;transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,68,68,.35);}
+    .cta-dark{background:#00D4FF;color:#fff;border:none;border-radius:8px;padding:16px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
+    .cta-dark:hover{background:#00AACC;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,.35);}
 
     .cta-light{color:#fff;border:none;border-radius:10px;padding:16px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
     .cta-light:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.2);}
@@ -472,13 +472,13 @@ export default function WhatsmyAIQ() {
     .email-input::placeholder{color:#BDBDBD;}
     .email-input:focus{border-color:#999;}
 
-    .ticker-wrap{overflow:hidden;white-space:nowrap;border-top:1px solid rgba(255,68,68,.16);border-bottom:1px solid rgba(255,68,68,.16);padding:8px 0;margin:24px 0;}
+    .ticker-wrap{overflow:hidden;white-space:nowrap;border-top:1px solid rgba(0,212,255,.16);border-bottom:1px solid rgba(0,212,255,.16);padding:8px 0;margin:24px 0;}
     .ticker-inner{display:inline-block;animation:ticker 24s linear infinite;}
-    .t-item{display:inline-block;padding:0 26px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,68,68,.6);font-family:'DM Sans',sans-serif;}
+    .t-item{display:inline-block;padding:0 26px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,212,255,.6);font-family:'DM Sans',sans-serif;}
 
-    .scanline{position:fixed;left:0;right:0;height:100px;background:linear-gradient(transparent,rgba(255,68,68,.03),transparent);animation:scanline 10s linear infinite;pointer-events:none;z-index:999;}
+    .scanline{position:fixed;left:0;right:0;height:100px;background:linear-gradient(transparent,rgba(0,212,255,.03),transparent);animation:scanline 10s linear infinite;pointer-events:none;z-index:999;}
     .glitch{position:relative;}
-    .glitch::after{content:attr(data-text);position:absolute;top:0;left:0;color:#FF4444;opacity:0;pointer-events:none;}
+    .glitch::after{content:attr(data-text);position:absolute;top:0;left:0;color:#00D4FF;opacity:0;pointer-events:none;}
     .glitch.active::after{opacity:.55;animation:glitch1 .15s steps(1) forwards;}
 
     .tier-avatar{animation:avatarIn .7s cubic-bezier(0.175,0.885,0.32,1.275) forwards;width:100%;border-radius:16px;object-fit:cover;display:block;}
@@ -509,7 +509,7 @@ export default function WhatsmyAIQ() {
     .badge-value{font-size:.9rem;font-weight:700;color:#1A1A1A;}
   `;
 
-  const tickers = ["AI replaced 300M jobs globally","85% of companies accelerating AI adoption","AI-literate workers earn 25% more","The gap widens every week","Are you on the right side of this?"];
+  const tickers = ["Most people overestimate their AI level","What's your real AIQ?","Only 12% of professionals use AI strategically","Are you actually informed — or just nodding along?","Find out where you actually stand"];
 
   return (
     <>
@@ -519,20 +519,20 @@ export default function WhatsmyAIQ() {
         <div className="dark-screen">
           <div className="scanline"/>
           <div style={{padding:"16px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid rgba(255,255,255,.05)"}}>
-            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em"}}>WHAT'S MY <span style={{color:"#FF4444"}}>AIQ</span></div>
+            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em"}}>WHAT'S MY <span style={{color:"#00D4FF"}}>AIQ</span></div>
             <div style={{fontSize:".68rem",color:"rgba(255,255,255,.22)",letterSpacing:".08em",textTransform:"uppercase"}}>whatsmyaiq.online</div>
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
-            <div className="fu1" style={{display:"inline-flex",alignItems:"center",gap:"7px",background:"rgba(255,68,68,.1)",border:"1px solid rgba(255,68,68,.24)",borderRadius:"4px",padding:"5px 12px",fontSize:".68rem",letterSpacing:".12em",textTransform:"uppercase",color:"#FF4444",marginBottom:"24px"}}>
-              <span style={{width:"5px",height:"5px",background:"#FF4444",borderRadius:"50%",display:"inline-block",animation:"blink 1s step-end infinite"}}/>AI Job Displacement: Active
+            <div className="fu1" style={{display:"inline-flex",alignItems:"center",gap:"7px",background:"rgba(0,212,255,.1)",border:"1px solid rgba(0,212,255,.24)",borderRadius:"4px",padding:"5px 12px",fontSize:".68rem",letterSpacing:".12em",textTransform:"uppercase",color:"#00D4FF",marginBottom:"24px"}}>
+              <span style={{width:"5px",height:"5px",background:"#00D4FF",borderRadius:"50%",display:"inline-block",animation:"blink 1s step-end infinite"}}/>2 min · free · find your level
             </div>
-            <h1 className={`fu2 glitch${glitchActive?" active":""}`} data-text="AI IS REPLACING PEOPLE." style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"clamp(2.4rem,8vw,4.4rem)",lineHeight:1.0,color:"#fff",marginBottom:"16px",textTransform:"uppercase",letterSpacing:".02em"}}>
-              AI IS REPLACING<br/><span style={{color:"#FF4444"}}>PEOPLE.</span>
+            <h1 className={`fu2 glitch${glitchActive?" active":""}`} data-text="WHAT'S YOUR REAL AIQ?" style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"clamp(2.4rem,8vw,4.4rem)",lineHeight:1.0,color:"#fff",marginBottom:"16px",textTransform:"uppercase",letterSpacing:".02em"}}>
+              WHAT'S YOUR<br/><span style={{color:"#00D4FF"}}>REAL AIQ?</span>
             </h1>
-            <p className="fu3" style={{fontSize:"1rem",color:"rgba(232,232,240,.52)",lineHeight:1.65,marginBottom:"10px"}}>Your classmates and colleagues are using AI to do in 2 hours what takes you a day. The question isn't whether AI affects your future.</p>
-            <p className="fu3" style={{fontSize:"1.05rem",color:"#fff",fontWeight:600,lineHeight:1.5,marginBottom:"24px"}}>It's whether <span style={{color:"#FF4444"}}>you're on the right side of it.</span></p>
+            <p className="fu3" style={{fontSize:"1rem",color:"rgba(232,232,240,.52)",lineHeight:1.65,marginBottom:"10px"}}>Your feed is full of AI. Your friends won't stop talking about it. But which tools are actually worth your time and money?</p>
+            <p className="fu3" style={{fontSize:"1.05rem",color:"#fff",fontWeight:600,lineHeight:1.5,marginBottom:"24px"}}>Find out exactly <span style={{color:"#00D4FF"}}>where you actually stand.</span></p>
             <div className="ticker-wrap fu4">
-              <div className="ticker-inner">{[...tickers,...tickers].map((t,i)=><span key={i} className="t-item">{t} <span style={{color:"rgba(255,68,68,.3)"}}>◆</span></span>)}</div>
+              <div className="ticker-inner">{[...tickers,...tickers].map((t,i)=><span key={i} className="t-item">{t} <span style={{color:"rgba(0,212,255,.3)"}}>◆</span></span>)}</div>
             </div>
             <div className="fu4" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px",marginBottom:"28px"}}>
               {[{num:"8",label:"Questions"},{num:"2 MIN",label:"To complete"},{num:"FREE",label:"To start"}].map(s=>(
@@ -543,7 +543,7 @@ export default function WhatsmyAIQ() {
               ))}
             </div>
             <div className="fu5" style={{display:"flex",flexDirection:"column",alignItems:"stretch",gap:"9px"}}>
-              <button className="cta-dark" style={{width:"100%"}} onClick={()=>setScreen("audience")}>Find Out If You're AI-Proof →</button>
+              <button className="cta-dark" style={{width:"100%"}} onClick={()=>setScreen("audience")}>Discover Your AIQ →</button>
               <p style={{textAlign:"center",fontSize:".74rem",color:"rgba(255,255,255,.2)"}}>Takes 2 minutes · Free · No signup required</p>
             </div>
           </div>
@@ -553,11 +553,11 @@ export default function WhatsmyAIQ() {
       {screen === "audience" && (
         <div className="dark-screen">
           <div style={{padding:"16px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid rgba(255,255,255,.05)"}}>
-            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#E8E8F0"}}>WHAT'S MY <span style={{color:"#FF4444"}}>AIQ</span></div>
+            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#E8E8F0"}}>WHAT'S MY <span style={{color:"#00D4FF"}}>AIQ</span></div>
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
             <div className="fu1" style={{marginBottom:"28px"}}>
-              <p style={{fontSize:".72rem",letterSpacing:".12em",textTransform:"uppercase",color:"#FF4444",marginBottom:"10px",fontWeight:600}}>Before we begin</p>
+              <p style={{fontSize:".72rem",letterSpacing:".12em",textTransform:"uppercase",color:"#00D4FF",marginBottom:"10px",fontWeight:600}}>Before we begin</p>
               <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"clamp(1.6rem,5vw,2.2rem)",color:"#fff",textTransform:"uppercase",lineHeight:1.1}}>Where do you already use AI?</h2>
               <p style={{fontSize:".88rem",color:"rgba(255,255,255,.35)",marginTop:"8px"}}>Your modules and action plan will be built around your answer.</p>
             </div>
@@ -575,12 +575,12 @@ export default function WhatsmyAIQ() {
       {screen === "quiz" && (
         <div className="dark-screen">
           <div style={{padding:"16px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid rgba(255,255,255,.05)"}}>
-            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#E8E8F0"}}>WHAT'S MY <span style={{color:"#FF4444"}}>AIQ</span></div>
-            <div style={{fontSize:".68rem",color:"rgba(255,68,68,.5)",letterSpacing:".08em",textTransform:"uppercase"}}>AI-Proof Test</div>
+            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#E8E8F0"}}>WHAT'S MY <span style={{color:"#00D4FF"}}>AIQ</span></div>
+            <div style={{fontSize:".68rem",color:"rgba(0,212,255,.5)",letterSpacing:".08em",textTransform:"uppercase"}}>AIQ Assessment</div>
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"28px 20px 60px",transition:"opacity .2s,transform .2s",opacity:animIn?1:0,transform:animIn?"translateY(0)":"translateY(10px)"}}>
             <div style={{display:"flex",gap:"4px",marginBottom:"5px"}}>
-              {QUESTIONS.map((_,i)=><div key={i} style={{flex:1,height:"3px",borderRadius:"2px",background:i<current?"#FF4444":i===current?"rgba(255,68,68,.38)":"rgba(255,255,255,.06)",transition:"background .3s"}}/>)}
+              {QUESTIONS.map((_,i)=><div key={i} style={{flex:1,height:"3px",borderRadius:"2px",background:i<current?"#00D4FF":i===current?"rgba(0,212,255,.38)":"rgba(255,255,255,.06)",transition:"background .3s"}}/>)}
             </div>
             <p style={{fontSize:".7rem",color:"rgba(255,255,255,.26)",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"28px"}}>Question {current+1} of {QUESTIONS.length}</p>
             <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"clamp(1.25rem,3.5vw,1.65rem)",lineHeight:1.2,color:"#fff",marginBottom:"20px",textTransform:"uppercase",letterSpacing:".02em"}}>{QUESTIONS[current].question}</h2>
