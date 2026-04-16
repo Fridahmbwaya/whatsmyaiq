@@ -996,7 +996,7 @@ export default function WhatsmyAIQ() {
 
             {/* Hero image */}
             <div className="fu1" style={{marginBottom:"24px",borderRadius:"16px",overflow:"hidden",maxHeight:"380px"}}>
-              <img src={tierImage} alt={tier.personality.title} className="tier-avatar-float" style={{width:"100%",maxHeight:"380px",objectFit:"cover",objectPosition:"top",borderRadius:"16px"}}/>
+              <img src={tierImage} alt={tier.personality.title} className="tier-avatar-float" style={{width:"100%",maxHeight:"380px",objectFit:"cover",objectPosition:"center",borderRadius:"16px"}}/>
             </div>
 
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
