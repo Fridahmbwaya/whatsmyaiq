@@ -88,13 +88,13 @@ const QUESTIONS = [
   },
   {
     id: 8,
-    question: "If your company or university hired someone great at AI tomorrow — how would you compare?",
+    question: "Someone joins your team tomorrow and they're brilliant at AI. Your honest first reaction?",
     options: [
-      { text: "I'd be the benchmark they're measured against", points: 5 },
-      { text: "I'd hold my own — I have practical AI skills", points: 4 },
-      { text: "I'd be about average", points: 3 },
-      { text: "They'd likely outperform me", points: 2 },
-      { text: "I wouldn't be close", points: 1 },
+      { text: "I'd be the one they're learning from — I'm already ahead", points: 5 },
+      { text: "Excited — I'd finally have someone to geek out with about this", points: 4 },
+      { text: "Relieved — I could use the support, I know I'm behind", points: 3 },
+      { text: "Honestly a bit threatened — they'd probably outshine me on things I should already know", points: 2 },
+      { text: "Anxious — I wouldn't know where to start to catch up", points: 1 },
     ],
   },
 ];
