@@ -10,7 +10,7 @@ const AUDIENCES = [
 
 const QUESTIONS = [
   {
-    id: 1,
+    id: 1,objectPosition:"50% 15%",borderRadius:"16px"
     question: "When you hear AI is changing your field, what's your honest reaction?",
     options: [
       { text: "I'm ahead of it — I'm already building or using the tools doing the changing", points: 5 },
