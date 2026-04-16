@@ -10,7 +10,7 @@ const AUDIENCES = [
 
 const QUESTIONS = [
   {
-    id: 1,objectPosition:"50% 15%",borderRadius:"16px"
+    id: 1,objectPosition:"50% 10%",borderRadius:"16px"
     question: "When you hear AI is changing your field, what's your honest reaction?",
     options: [
       { text: "I'm ahead of it — I'm already building or using the tools doing the changing", points: 5 },
@@ -998,7 +998,7 @@ export default function WhatsmyAIQ() {
             <div className="fu1" style={{marginBottom:"24px",borderRadius:"16px",overflow:"hidden",maxHeight:"380px"}}>
               <img src={tierImage} alt={tier.personality.title} className="tier-avatar-float" style={{width:"100%",maxHeight:"380px",objectFit:"cover",objectPosition:"center",borderRadius:"16px"}}/>
             </div>
-
+maxHeight:"420px"
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
 
             <h2 className="fu2" style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"clamp(2rem,6vw,3rem)",color:tier.color,textTransform:"uppercase",letterSpacing:".02em",lineHeight:1,marginBottom:"4px"}}>
