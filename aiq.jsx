@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 
 const AUDIENCES = [
-  { id: "student", emoji: "📚", label: "Student", sub: "School, university, or studying" },
-  { id: "work", emoji: "💼", label: "Professional", sub: "Your job or career" },
-  { id: "side", emoji: "🚀", label: "Building something", sub: "Side project, startup, or freelance" },
-  { id: "both", emoji: "🔀", label: "All of the above", sub: "School + work + something on the side" },
+  { id: "student", emoji: "📚", label: "Student", sub: "School, university, coursework, or studying" },
+  { id: "work", emoji: "💼", label: "Employee / Professional", sub: "Your job, internship, or day-to-day work" },
+  { id: "side", emoji: "🚀", label: "Founder / Side Project", sub: "A business, startup, freelance work, or something you're building" },
+  { id: "both", emoji: "🔀", label: "A Mix of These", sub: "You use AI across school, work, and side projects — often all at once" },
 ];
 
 const QUESTIONS = [
@@ -13,9 +13,9 @@ const QUESTIONS = [
     id: 1,
     question: "When you hear AI is changing your field, what's your honest reaction?",
     options: [
-      { text: "I'm ahead of it — I'm building or using the tools doing the changing", points: 5 },
+      { text: "I'm ahead of it — I'm already building or using the tools doing the changing", points: 5 },
       { text: "I'm aware and actively positioning myself ahead of it", points: 4 },
-      { text: "I know I should do more but haven't made it a priority", points: 3 },
+      { text: "I know I should be doing more, but haven't made it a priority", points: 3 },
       { text: "I feel behind and a bit anxious about it", points: 2 },
       { text: "Honestly I try not to think about it", points: 1 },
     ],
@@ -26,7 +26,7 @@ const QUESTIONS = [
     options: [
       { text: "Multiple times a day — it's core to how I work or study", points: 5 },
       { text: "Daily, for writing, research, or thinking through problems", points: 4 },
-      { text: "A few times a week when I remember to", points: 3 },
+      { text: "A few times a week — when I remember or have time", points: 3 },
       { text: "Occasionally — I've tried it but it's not a real habit", points: 2 },
       { text: "Barely at all", points: 1 },
     ],
@@ -35,9 +35,9 @@ const QUESTIONS = [
     id: 3,
     question: "Which best describes your knowledge of AI tools available right now?",
     options: [
-      { text: "I know multiple tools deeply — Claude, Perplexity, DeepSeek, ChatGPT — and use each for different reasons", points: 5 },
-      { text: "I know a few tools well and have clear reasons for using each", points: 4 },
-      { text: "I mainly use ChatGPT and know a couple of others exist", points: 3 },
+      { text: "I know multiple tools deeply — and use each for different reasons", points: 5 },
+      { text: "I know a few tools well — and choose between them intentionally", points: 4 },
+      { text: "I mainly use ChatGPT — it's my default for almost everything", points: 3 },
       { text: "I've heard of a few but mostly just use ChatGPT when I need something", points: 2 },
       { text: "I don't really know what's out there beyond ChatGPT", points: 1 },
     ],
@@ -46,21 +46,21 @@ const QUESTIONS = [
     id: 4,
     question: "You need to research a complex topic and cite real sources. What do you actually do?",
     options: [
-      { text: "Use Perplexity or Claude — I need cited, verifiable sources I can trust", points: 5 },
-      { text: "Ask ChatGPT then verify the key claims independently", points: 4 },
-      { text: "Ask ChatGPT and mostly trust what it gives me", points: 3 },
-      { text: "Google it — I go deep myself, cross-referencing multiple sources", points: 2 },
-      { text: "I just Google it, AI isn't really part of my research process yet", points: 1 },
+      { text: "I start with AI tools that surface sources, then verify key claims properly", points: 5 },
+      { text: "I start with AI, then verify the important claims independently", points: 4 },
+      { text: "I use AI and double-check only if something feels off", points: 3 },
+      { text: "I mostly rely on AI and don't verify much unless I have to", points: 2 },
+      { text: "I prefer not to use AI for serious research", points: 1 },
     ],
   },
   {
     id: 5,
     question: "When you use AI, how would you describe your prompting style?",
     options: [
-      { text: "I use structured frameworks — role, context, task, format — and engineer prompts deliberately", points: 5 },
-      { text: "I guide it as we go — I pull, react to the output, add context, and iterate until it's right", points: 4 },
-      { text: "I write detailed prompts upfront and refine based on what comes back", points: 3 },
-      { text: "I type a clear question and try a couple of variations if it doesn't work", points: 2 },
+      { text: "I design prompts deliberately using structure and strategy", points: 5 },
+      { text: "I guide it as we go — pull, react, add context, iterate until it's right", points: 4 },
+      { text: "I start with a detailed prompt and refine based on the output", points: 3 },
+      { text: "I ask a clear question and try a few variations if needed", points: 2 },
       { text: "I type what I need and take what I get", points: 1 },
     ],
   },
@@ -68,22 +68,22 @@ const QUESTIONS = [
     id: 6,
     question: "AI gives you a confident, detailed answer — but something feels off. What do you do?",
     options: [
-      { text: "I have a verification routine: cross-check sources, run a second model, flag uncertainties", points: 5 },
-      { text: "I dig into the specific claim that felt wrong and verify it properly", points: 4 },
-      { text: "I Google the main facts to spot-check", points: 3 },
-      { text: "I use it but add a mental note that it might need checking", points: 2 },
-      { text: "I use it anyway — it's probably fine", points: 1 },
+      { text: "I have a verification routine: cross-check, compare models, and flag uncertainty", points: 5 },
+      { text: "I dig into the specific claim that feels wrong and verify it properly", points: 4 },
+      { text: "I quickly spot-check the key facts", points: 3 },
+      { text: "I use it, but keep in mind that it may need checking", points: 2 },
+      { text: "I usually use it anyway — it's probably fine", points: 1 },
     ],
   },
   {
     id: 7,
-    question: "Have you ever connected AI into a repeatable system — notes, tasks, spreadsheets, automations, or workflows?",
+    question: "Have you connected AI into a repeatable system — notes, tasks, spreadsheets, automations, or workflows?",
     options: [
-      { text: "Yes — I've built agents or automations that run without me", points: 5 },
-      { text: "Yes — AI is embedded into my regular workflow in a structured way", points: 4 },
-      { text: "Partially — I use AI in some tasks regularly but it's not fully systematised", points: 3 },
-      { text: "Not really — I use it ad hoc when I think of it", points: 2 },
-      { text: "No, I haven't gotten that far yet", points: 1 },
+      { text: "I've built systems or automations that run without me", points: 5 },
+      { text: "AI is embedded into my regular workflow in a structured way", points: 4 },
+      { text: "I use AI regularly in some tasks, but not systematically", points: 3 },
+      { text: "I use AI ad hoc when I think of it", points: 2 },
+      { text: "I don't really use AI in a structured way yet", points: 1 },
     ],
   },
   {
@@ -91,14 +91,13 @@ const QUESTIONS = [
     question: "If your company or university hired someone great at AI tomorrow — how would you compare?",
     options: [
       { text: "I'd be the benchmark they're measured against", points: 5 },
-      { text: "I'd hold my own — I have real, practical AI skills", points: 4 },
-      { text: "I'd be roughly equal — neither ahead nor behind", points: 3 },
-      { text: "They'd probably outshine me in most areas", points: 2 },
+      { text: "I'd hold my own — I have practical AI skills", points: 4 },
+      { text: "I'd be about average", points: 3 },
+      { text: "They'd likely outperform me", points: 2 },
       { text: "I wouldn't be close", points: 1 },
     ],
   },
 ];
-
 const TIER_IMAGES = {
   "At Risk": "/images/bystander.png",
   "Operator": "/images/operator.png",
@@ -297,7 +296,355 @@ function getTier(score) {
   return TIERS.find((t) => score >= t.min && score <= t.max) || TIERS[0];
 }
 function getModules(tier, audience) {
-  return tier.modules[audience === "student" ? "student" : "work"] || tier.modules.work;
+  if (audience === "student") return tier.modules.student || tier.modules.work;
+  if (audience === "work") return tier.modules.work || tier.modules.student;
+  if (audience === "side") return tier.modules.work || tier.modules.student;
+  if (audience === "both") return tier.modules.work || tier.modules.student;
+  return tier.modules.work || tier.modules.student;
+}
+
+const AUDIENCE_META = {
+  student: { label: "student", labelLong: "student" },
+  work: { label: "professional", labelLong: "professional" },
+  side: { label: "builder", labelLong: "founder / side-project builder" },
+  both: { label: "multi-context user", labelLong: "student, professional, and builder" },
+};
+
+const FREE_RESULT_COPY = {
+  "At Risk": {
+    student: {
+      means: [
+        "Right now, AI is not really part of how you study.",
+        "You may have tried it a few times, but it is not yet something you reach for naturally when you are reading, revising, or getting unstuck.",
+      ],
+      missing: [
+        "You are still doing first drafts, explanations, and study support fully manually.",
+        "You are spending more time than you need to on getting started.",
+        "You do not yet have a basic habit of using AI to make school feel lighter.",
+      ],
+      next: [
+        "This is not about mastering every tool.",
+        "It is about getting comfortable using AI for small, everyday academic tasks.",
+        "Your report shows you exactly where to start without crossing the line into lazy or low-integrity work.",
+      ],
+    },
+    work: {
+      means: [
+        "Right now, AI is not really part of how you work.",
+        "You may be aware of it, but it is not yet something shaping how you write, research, or get through routine tasks.",
+      ],
+      missing: [
+        "You are still doing simple drafting, summarising, and idea-generation fully manually.",
+        "You are spending time on tasks that no longer need your full effort.",
+        "You do not yet have a reliable habit of using AI to make work faster or cleaner.",
+      ],
+      next: [
+        "This is not about becoming an expert overnight.",
+        "It is about building a basic working habit that immediately saves time.",
+        "Your report shows you the first use cases worth adopting in your role.",
+      ],
+    },
+    side: {
+      means: [
+        "Right now, AI is not meaningfully part of how you build.",
+        "You may have experimented with it, but it is not yet helping you move ideas into action faster.",
+      ],
+      missing: [
+        "You are still brainstorming, drafting, and figuring things out mostly on your own.",
+        "You are not yet using AI to reduce the friction of building.",
+        "Your progress depends almost entirely on your own time and energy.",
+      ],
+      next: [
+        "This is not about agents or advanced systems yet.",
+        "It is about using AI to reduce the drag that slows down small projects.",
+        "Your report shows you the first places where AI can actually speed up execution.",
+      ],
+    },
+    both: {
+      means: [
+        "Right now, AI is not yet a real habit across school, work, or anything you are building.",
+        "You may know it matters, but it is not consistently helping you in the places where it could save the most time.",
+      ],
+      missing: [
+        "You are still handling similar tasks manually across multiple parts of your life.",
+        "You do not yet have one reliable way of using AI that travels across contexts.",
+        "You are putting in more effort than you need to almost everywhere.",
+      ],
+      next: [
+        "This is about building one habit that starts paying off across contexts.",
+        "Not everything at once — just the first repeatable use that changes your week.",
+        "Your report shows you where that first win is most likely to be.",
+      ],
+    },
+  },
+  Operator: {
+    student: {
+      means: [
+        "You are already using AI for school, which puts you ahead of most students.",
+        "But right now your usage looks like this: you open ChatGPT when you are stuck, get help with an assignment or concept, and then move on.",
+      ],
+      missing: [
+        "You use AI to get through work faster, but not to structure how you study.",
+        "You still take notes, revise, and organise material mostly from scratch.",
+        "Each assignment gets easier, but your overall system is not improving.",
+      ],
+      next: [
+        "Your next level is not using AI more for homework.",
+        "It is using it to support how you learn, revise, and prepare across subjects.",
+        "Your report shows where your current approach is leaving real study leverage on the table.",
+      ],
+    },
+    work: {
+      means: [
+        "You are already using AI at work, which puts you ahead of most people.",
+        "But right now your usage looks like this: you use it for quick drafting, emails, writing, or thinking help when needed, then go back to your usual process.",
+      ],
+      missing: [
+        "You speed up one-off tasks, but still redo similar work each time.",
+        "You do not yet have a repeatable way of using AI across your actual workflow.",
+        "Your output is faster, but your process has not really changed.",
+      ],
+      next: [
+        "Your next level is not just using AI more often.",
+        "It is turning repeat tasks into structured workflows and using different tools for different jobs.",
+        "Your report shows where that shift would create the biggest payoff in your role.",
+      ],
+    },
+    side: {
+      means: [
+        "You are already using AI for something you are building, which puts you ahead of most people.",
+        "But right now your usage looks like this: you use it for ideas, writing, or getting unstuck, but not as a real execution layer.",
+      ],
+      missing: [
+        "You use AI to help think, but not to speed up actual building.",
+        "You are still doing too much manually across research, drafting, and execution.",
+        "You do not yet have a repeatable system for building with AI.",
+      ],
+      next: [
+        "Your next level is not using AI only when you hit a wall.",
+        "It is using it across the actual build process so progress compounds.",
+        "Your report shows where your current setup is slowing down what you are building.",
+      ],
+    },
+    both: {
+      means: [
+        "You are already using AI across more than one part of your life, which is a strong starting point.",
+        "But right now your usage is still reactive: you reach for it when stuck, not as part of one system that helps across school, work, and building.",
+      ],
+      missing: [
+        "You solve tasks faster in the moment, but start from scratch too often.",
+        "You are not yet carrying what works from one context into another.",
+        "You are using AI, but not in a way that compounds across your week.",
+      ],
+      next: [
+        "Your next level is building one repeatable way of working that travels across contexts.",
+        "That means fewer one-off prompts and more reusable patterns.",
+        "Your report shows where that cross-context leverage is easiest to unlock.",
+      ],
+    },
+  },
+  Navigator: {
+    student: {
+      means: [
+        "You have moved past basic use and are already exploring AI more intentionally than most students.",
+        "You try different tools, compare outputs, and think more critically about what each one is good for.",
+      ],
+      missing: [
+        "You are learning fast, but not always locking in what works.",
+        "You switch between tools, but do not yet have a clear academic setup for repeat tasks.",
+        "You experiment often, but your best methods are not compounding yet.",
+      ],
+      next: [
+        "Your next level is turning exploration into consistency.",
+        "That means deciding which tools you trust for which academic tasks and reusing what works.",
+        "Your report shows where your current experimentation still leaks time.",
+      ],
+    },
+    work: {
+      means: [
+        "You are ahead of most professionals because you already know AI is not just one tool.",
+        "You explore, compare, and adjust instead of blindly accepting the first answer.",
+      ],
+      missing: [
+        "You are improving, but your setup is still more exploratory than systematic.",
+        "You find useful prompts and workflows, but do not always save or standardise them.",
+        "Each task still takes more fresh effort than it should.",
+      ],
+      next: [
+        "Your next level is moving from experimenting well to operating consistently.",
+        "That means assigning tools to tasks and building repeatable ways of working.",
+        "Your report shows where your current curiosity is not yet translating into real leverage.",
+      ],
+    },
+    side: {
+      means: [
+        "You are already using multiple tools and thinking more strategically than most people building things with AI.",
+        "You are not just playing around — you are exploring what each tool can do for different stages of execution.",
+      ],
+      missing: [
+        "You are discovering useful patterns, but not yet turning them into a build system.",
+        "You test workflows, but do not always formalise them into a repeatable process.",
+        "You are progressing, but not scaling your own learning yet.",
+      ],
+      next: [
+        "Your next level is turning discovery into a system you can rely on.",
+        "That means fewer experiments that disappear and more workflows that compound.",
+        "Your report shows where that shift matters most for what you are building.",
+      ],
+    },
+    both: {
+      means: [
+        "You are already more thoughtful than most because you use different tools across different contexts.",
+        "You are experimenting intelligently, but your setup is still fragmented.",
+      ],
+      missing: [
+        "You are learning in multiple lanes, but not yet unifying what works.",
+        "You have useful instincts, but not one clear system that follows you across school, work, and projects.",
+        "Your progress is real, but it still depends on remembering what to do each time.",
+      ],
+      next: [
+        "Your next level is creating consistency across contexts.",
+        "That means fewer scattered experiments and more reusable patterns that travel with you.",
+        "Your report shows where that fragmentation is costing you the most.",
+      ],
+    },
+  },
+  Architect: {
+    student: {
+      means: [
+        "You already think about AI at a systems level, not just as a shortcut.",
+        "You are intentional with prompts, outputs, and tools, and you are operating at a much higher level than most students.",
+      ],
+      missing: [
+        "You still rebuild strong processes more often than you should.",
+        "You know how to get excellent outputs, but your systems still depend heavily on your own active input.",
+        "Your results are strong, but not yet as reusable or automated as they could be.",
+      ],
+      next: [
+        "Your next level is turning your thinking into systems that keep working without constant reinvention.",
+        "That means less manual orchestration and more designed reuse.",
+        "Your report shows where your current process still depends too much on you.",
+      ],
+    },
+    work: {
+      means: [
+        "You are already operating beyond most professionals because you think strategically about how AI should be used, not just whether it can help.",
+        "You are deliberate with tools, prompts, and outputs, and that changes the quality of your work.",
+      ],
+      missing: [
+        "You still rebuild strong workflows more often than necessary.",
+        "You optimise tasks well, but many of your best processes still require your direct involvement every time.",
+        "Your systems are strong, but not yet fully leveraged.",
+      ],
+      next: [
+        "Your next level is moving from control to leverage.",
+        "That means designing workflows once and using them many times with minimal intervention.",
+        "Your report shows where your current process still depends too much on your time and attention.",
+      ],
+    },
+    side: {
+      means: [
+        "You are already thinking like a builder, not just a user.",
+        "You see workflows, not just prompts, and that puts you far ahead of most people building with AI.",
+      ],
+      missing: [
+        "You can create strong systems, but you may still be rebuilding or over-managing them.",
+        "You know how to make things work, but not every process is yet reliable or reusable.",
+        "Your output is impressive, but some of your leverage still lives in your head.",
+      ],
+      next: [
+        "Your next level is turning your best thinking into systems that scale beyond your immediate input.",
+        "That means less reinvention and more durable build infrastructure.",
+        "Your report shows where that shift matters most for what you are creating.",
+      ],
+    },
+    both: {
+      means: [
+        "You are already operating at a systems level across more than one part of your life, which is rare.",
+        "You are not just using AI well — you are thinking about structure, repeatability, and leverage.",
+      ],
+      missing: [
+        "Your systems are strong, but some of them still depend too much on your own memory and attention.",
+        "You may be rebuilding good processes separately in different contexts.",
+        "You are already advanced, but not yet fully compounding that advantage across your whole week.",
+      ],
+      next: [
+        "Your next level is designing once and benefiting across contexts.",
+        "That means fewer duplicated systems and more shared infrastructure in how you think and work.",
+        "Your report shows where your leverage is strongest and where it is still leaking.",
+      ],
+    },
+  },
+  Vanguard: {
+    student: {
+      means: [
+        "You are already operating at a level where most people would come to you for AI advice.",
+        "You are not trying to catch up — you are already ahead, and your real question is how to stay there.",
+      ],
+      missing: [
+        "Your risk is not ignorance. It is coasting on an edge that still needs to deepen.",
+        "You may be using AI brilliantly, but not always converting that edge into broader influence or long-term systems.",
+        "At your level, the gains are less obvious — but still very real.",
+      ],
+      next: [
+        "Your next level is not basic skill growth. It is sharper strategy, stronger systems, and bigger influence.",
+        "That means going deeper, not just maintaining your lead.",
+        "Your report shows where your current edge can still expand meaningfully.",
+      ],
+    },
+    work: {
+      means: [
+        "You are already ahead enough that most people around you are still trying to catch up.",
+        "You are not just competent with AI — you are operating near the frontier of what practical users in your context are doing.",
+      ],
+      missing: [
+        "Your risk is not falling behind. It is staying impressive without becoming more strategic.",
+        "You may already have the skill, but not yet be translating it into the largest possible leverage or influence.",
+        "At your level, the gap is not obvious productivity — it is scale, leadership, and positioning.",
+      ],
+      next: [
+        "Your next level is not more experimentation for its own sake.",
+        "It is using your edge to shape systems, teams, and decisions more deliberately.",
+        "Your report shows where your current strength can still become bigger leverage.",
+      ],
+    },
+    side: {
+      means: [
+        "You are already operating at a level where AI is clearly a build advantage, not just a convenience.",
+        "You are thinking beyond usage and into strategy, opportunity, and what is worth building.",
+      ],
+      missing: [
+        "Your risk is not underusing AI. It is using it well without pushing toward the highest-leverage opportunities.",
+        "You may already move fast, but not every strength is yet translating into durable advantage.",
+        "At your level, the gap is less about speed and more about strategic depth.",
+      ],
+      next: [
+        "Your next level is turning your edge into something more durable than good execution.",
+        "That means sharper choices about what to build, what to automate, and what is actually worth pursuing.",
+        "Your report shows where that frontier-level leverage still has room to expand.",
+      ],
+    },
+    both: {
+      means: [
+        "You are already rare because you are using AI at a high level across multiple parts of your life.",
+        "You are not just ahead in one lane — your edge is broad, and that is exactly why the next level matters so much.",
+      ],
+      missing: [
+        "Your risk is not being behind. It is spreading your advantage without fully concentrating it.",
+        "You may already be excellent in several contexts, but not yet maximising how those strengths reinforce each other.",
+        "At your level, the opportunity is not more basic skill. It is sharper leverage.",
+      ],
+      next: [
+        "Your next level is integrating your edge so it compounds across everything you do.",
+        "That means fewer isolated wins and more deliberate systems, positioning, and influence.",
+        "Your report shows where your current advantage can still become much more durable.",
+      ],
+    },
+  },
+};
+
+function getFreeResultCopy(tierLabel, audience) {
+  return FREE_RESULT_COPY[tierLabel]?.[audience] || FREE_RESULT_COPY[tierLabel]?.work || FREE_RESULT_COPY["Operator"].work;
 }
 
 const SYSTEM_PROMPT = `You are a sharp, direct AI capability advisor. Write a personalised AI report. Be specific, honest, useful. Balance urgency with agency.
@@ -336,12 +683,36 @@ export default function WhatsmyAIQ() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [emailError, setEmailError] = useState("");
 
+  // On mount: check if Stripe redirected back with ?paid=true
+  // If so, restore saved quiz state and generate the report
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("paid") === "true") {
+      const savedAnswers = JSON.parse(sessionStorage.getItem("aiq_answers") || "[]");
+      const savedAudience = sessionStorage.getItem("aiq_audience");
+      const savedEmail = sessionStorage.getItem("aiq_email") || "";
+      if (savedAnswers.length === QUESTIONS.length && savedAudience) {
+        setAnswers(savedAnswers);
+        setAudience(savedAudience);
+        setEmail(savedEmail);
+        setEmailSubmitted(true);
+        setScreen("report");
+        // Clear the ?paid=true from URL without reloading
+        window.history.replaceState({}, "", window.location.pathname);
+        // Generate the report using saved data
+        generateReport(savedAnswers, savedAudience);
+      }
+    }
+  }, []);
+
   const totalScore = answers.reduce((s, a) => s + a, 0);
   const tier = getTier(totalScore);
   const maxScore = QUESTIONS.reduce((s, q) => s + Math.max(...q.options.map(o => o.points)), 0);
   const pct = Math.round(((totalScore - 8) / (maxScore - 8)) * 100);
   const modules = audience ? getModules(tier, audience) : [];
-  const audienceLabel = audience === "student" ? "student" : audience === "both" ? "student and professional" : "professional";
+  const audienceMeta = AUDIENCE_META[audience] || AUDIENCE_META.work;
+  const audienceLabel = audienceMeta.labelLong;
+  const freeResult = getFreeResultCopy(tier.label, audience);
   const tierImage = TIER_IMAGES[tier.label];
 
   useEffect(() => {
@@ -377,10 +748,26 @@ export default function WhatsmyAIQ() {
     setEmailSubmitted(true);
   }
 
-  async function unlockReport() {
+  // Save quiz state to sessionStorage, then redirect to Stripe
+  // After payment, Stripe sends user back to ?paid=true and we restore state
+  function unlockReport() {
+    sessionStorage.setItem("aiq_answers", JSON.stringify(answers));
+    sessionStorage.setItem("aiq_audience", audience || "work");
+    sessionStorage.setItem("aiq_email", email);
+    window.location.href = "https://buy.stripe.com/cNi8wQ7Vx5WD4V52Yh8g000";
+  }
+
+  // Separate function so it can be called both from button click and on redirect return
+  async function generateReport(savedAnswers, savedAudience) {
     setReportLoading(true);
-    setScreen("report");
-    const answerSummary = answers.map((pts, i) => {
+    const answersToUse = savedAnswers || answers;
+    const audienceToUse = savedAudience || audience;
+    const audienceMetaToUse = AUDIENCE_META[audienceToUse] || AUDIENCE_META.work;
+    const audienceLabelToUse = audienceMetaToUse.labelLong;
+    const scoreToUse = answersToUse.reduce((s, a) => s + a, 0);
+    const tierToUse = getTier(scoreToUse);
+
+    const answerSummary = answersToUse.map((pts, i) => {
       const q = QUESTIONS[i];
       const opt = q.options.find((o) => o.points === pts);
       return `Q${i + 1}: "${q.question}" → "${opt?.text}" (${pts} pts)`;
@@ -394,7 +781,7 @@ export default function WhatsmyAIQ() {
           model: "claude-sonnet-4-20250514",
           max_tokens: 1200,
           system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: `Context: ${audienceLabel}\nScore: ${totalScore}/${maxScore} — Tier: ${tier.label} (${tier.personality.title})\n\nAnswers:\n${answerSummary}` }],
+          messages: [{ role: "user", content: `Context: ${audienceLabelToUse}\nScore: ${scoreToUse}/${maxScore} — Tier: ${tierToUse.label} (${tierToUse.personality.title})\n\nAnswers:\n${answerSummary}` }],
         }),
       });
       const data = await res.json();
@@ -403,8 +790,8 @@ export default function WhatsmyAIQ() {
     } catch {
       setReport({
         headline: "You're at the threshold. The next move matters.",
-        summary: `As a ${tier.personality.title}, you're more aware than most — but the gap between awareness and systematic use is where you're losing the most time right now.`,
-        in_practice: ["You start tasks manually that AI could set up in 2 minutes", "Your AI outputs are functional but not as sharp as they could be", "You know AI could help more — you just haven't built the system yet"],
+        summary: `As a ${tierToUse.personality.title}, you're more aware than most — but the gap between awareness and systematic use is where you're losing the most time right now.`,
+        in_practice: ["You start tasks manually that AI could handle in minutes", "Your outputs are functional but not as sharp as they could be", "You know AI could help more — you just haven't built the system yet"],
         next_level: "Someone one tier above you has AI embedded into their daily workflow — it's not an extra step, it's how they work.",
         threats: ["Inconsistent use means inconsistent results", "The habit gap compounds — the longer you wait the bigger it grows"],
         advantages: ["You're self-aware enough to diagnose the problem", "You're at the stage where a small push creates disproportionate results"],
@@ -418,6 +805,10 @@ export default function WhatsmyAIQ() {
       });
     }
     setReportLoading(false);
+    // Clear sessionStorage after report is generated
+    sessionStorage.removeItem("aiq_answers");
+    sessionStorage.removeItem("aiq_audience");
+    sessionStorage.removeItem("aiq_email");
   }
 
   function reset() {
@@ -503,10 +894,13 @@ export default function WhatsmyAIQ() {
     .gap-item:last-child{border-bottom:none;}
     .step-badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-right:8px;}
 
-    .badge-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
-    .badge-card{border-radius:10px;padding:14px;text-align:center;}
-    .badge-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
-    .badge-value{font-size:.9rem;font-weight:700;color:#1A1A1A;}
+    .result-stack{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+    .result-card{background:#fff;border:1.5px solid #EBEBEB;border-radius:14px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+    .result-card-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#8F8F8F;margin-bottom:10px;font-weight:700;font-family:'DM Sans',sans-serif;}
+    .result-card-copy{font-size:.92rem;color:#444;line-height:1.6;}
+    .result-list{margin-top:10px;padding-left:18px;}
+    .result-list li{font-size:.9rem;color:#444;line-height:1.55;margin-bottom:8px;}
+    .result-note{margin-top:12px;padding-top:12px;border-top:1px solid #F1F1F1;font-size:.84rem;color:#777;line-height:1.5;}
   `;
 
   const tickers = ["Most people overestimate their AI level","What's your real AIQ?","Only 12% of professionals use AI strategically","Are you actually informed — or just nodding along?","Find out where you actually stand"];
@@ -617,31 +1011,35 @@ export default function WhatsmyAIQ() {
             </div>
             <p className="fu3" style={{fontSize:".75rem",color:"#BDBDBD",marginBottom:"24px",textAlign:"right"}}>Score: {totalScore}/{maxScore}</p>
 
-            <div className="fu3 badge-row">
-              <div className="badge-card" style={{background:tier.lightColor,border:`1.5px solid ${tier.accentColor}30`}}>
-                <div className="badge-label" style={{color:tier.color}}>Strongest at</div>
-                <div className="badge-value">{tier.badges.strong}</div>
+            <div className="fu3 result-stack">
+              <div className="result-card">
+                <p className="result-card-title">What this means for you</p>
+                {freeResult.means.map((paragraph) => (
+                  <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>
+                    {paragraph}
+                  </p>
+                ))}
               </div>
-              <div className="badge-card" style={{background:"#FEF5F5",border:"1.5px solid #FFCCCC"}}>
-                <div className="badge-label" style={{color:"#C0392B"}}>Weakest at</div>
-                <div className="badge-value">{tier.badges.weak}</div>
-              </div>
-              <div className="badge-card" style={{background:"#F5F5F0",border:"1.5px solid #E0E0D8"}}>
-                <div className="badge-label" style={{color:"#666"}}>Best next lane</div>
-                <div className="badge-value">{tier.badges.lane}</div>
-              </div>
-            </div>
 
-            <div className="fu3" style={{background:"#fff",border:"1.5px solid #EBEBEB",borderRadius:"14px",padding:"18px 20px",marginBottom:"20px",boxShadow:"0 1px 4px rgba(0,0,0,.04)"}}>
-              <p style={{fontSize:".68rem",letterSpacing:".12em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"12px",fontWeight:600}}>What your answers revealed:</p>
-              {[{icon:"✓",color:"#27AE60",text:tier.emailTeaser.win},{icon:"✗",color:"#E74C3C",text:tier.emailTeaser.gap1},{icon:"✗",color:"#E74C3C",text:tier.emailTeaser.gap2}].map((item,i,arr)=>(
-                <div key={item.text} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"9px 0",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none"}}>
-                  <span style={{color:item.color,fontWeight:700,fontSize:"1rem",flexShrink:0}}>{item.icon}</span>
-                  <span style={{fontSize:".9rem",color:"#444",lineHeight:1.4}}>{item.text}</span>
-                </div>
-              ))}
-              <div style={{marginTop:"14px",paddingTop:"14px",borderTop:"1px solid #F5F5F5"}}>
-                <p style={{fontSize:".82rem",color:"#888",lineHeight:1.5}}>Your full gap analysis, learning path, and 7-day action plan are in your report. <span style={{color:"#1A1A1A",fontWeight:600}}>Get your free snapshot first.</span></p>
+              <div className="result-card">
+                <p className="result-card-title">What you're missing out on</p>
+                <ul className="result-list">
+                  {freeResult.missing.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="result-card">
+                <p className="result-card-title">Your next level</p>
+                {freeResult.next.map((paragraph) => (
+                  <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>
+                    {paragraph}
+                  </p>
+                ))}
+                <p className="result-note">
+                  Your full gap analysis, learning path, and 7-day action plan go much deeper than this. Get your free snapshot first.
+                </p>
               </div>
             </div>
 
@@ -661,7 +1059,7 @@ export default function WhatsmyAIQ() {
                 </div>
                 <div style={{background:"#fff",border:"1.5px solid #EBEBEB",borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:"0 1px 4px rgba(0,0,0,.04)"}}>
                   <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"10px",fontWeight:600}}>Your full report includes:</p>
-                  {[`Your ${tier.personality.title} profile — what it means for your ${audienceLabel} context`,"Your exact capability gaps with specific examples","What someone one tier above you can do that you currently can't","Your fastest win this week","3 learning modules sequenced for your level and path","A 7-day action plan built for you"].map(item=>(
+                  {[`Your ${tier.personality.title} profile — what it means in your ${audienceLabel} context`,"Your exact capability gaps with specific examples","What someone one tier above you can do that you currently can't","Your fastest win this week","3 learning modules sequenced for your level and path","A 7-day action plan built for you"].map(item=>(
                     <div key={item} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"6px 0",borderBottom:"1px solid #F5F5F5",fontSize:".83rem",color:"#555"}}>
                       <span style={{color:tier.accentColor,fontWeight:700,flexShrink:0}}>→</span>{item}
                     </div>
@@ -669,7 +1067,7 @@ export default function WhatsmyAIQ() {
                   <div style={{marginTop:"16px"}}>
                     <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"2.2rem",fontWeight:900,color:"#1A1A1A"}}>$24.99</div>
                     <div style={{fontSize:".72rem",color:"#BDBDBD",marginBottom:"12px"}}>One-time · Instant access · No subscription</div>
-                    <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={() => window.open('https://buy.stripe.com/cNi8wQ7Vx5WD4V52Yh8g000', '_blank')}>Unlock My Full Report →</button>
+                    <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={unlockReport}>Unlock My Full Report →</button>
                   </div>
                 </div>
                 <p style={{textAlign:"center",fontSize:".7rem",color:"#BDBDBD"}}>🔒 Secure · Instant delivery · 7-day guarantee</p>
@@ -705,18 +1103,26 @@ export default function WhatsmyAIQ() {
                   </div>
                 </div>
 
-                <div className="badge-row" style={{marginBottom:"16px"}}>
-                  <div className="badge-card" style={{background:tier.lightColor,border:`1.5px solid ${tier.accentColor}30`}}>
-                    <div className="badge-label" style={{color:tier.color}}>Strongest at</div>
-                    <div className="badge-value">{tier.badges.strong}</div>
+                <div className="result-stack" style={{marginBottom:"16px"}}>
+                  <div className="result-card">
+                    <p className="result-card-title" style={{color:tier.color}}>What this means for you</p>
+                    {freeResult.means.map((paragraph) => (
+                      <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>{paragraph}</p>
+                    ))}
                   </div>
-                  <div className="badge-card" style={{background:"#FEF5F5",border:"1.5px solid #FFCCCC"}}>
-                    <div className="badge-label" style={{color:"#C0392B"}}>Weakest at</div>
-                    <div className="badge-value">{tier.badges.weak}</div>
+                  <div className="result-card">
+                    <p className="result-card-title" style={{color:tier.color}}>What you're missing out on</p>
+                    <ul className="result-list">
+                      {freeResult.missing.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="badge-card" style={{background:"#F5F5F0",border:"1.5px solid #E0E0D8"}}>
-                    <div className="badge-label" style={{color:"#666"}}>Best next lane</div>
-                    <div className="badge-value">{tier.badges.lane}</div>
+                  <div className="result-card">
+                    <p className="result-card-title" style={{color:tier.color}}>Your next level</p>
+                    {freeResult.next.map((paragraph) => (
+                      <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>{paragraph}</p>
+                    ))}
                   </div>
                 </div>
 
