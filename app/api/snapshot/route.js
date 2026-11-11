@@ -13,8 +13,10 @@ export async function POST(request) {
     if (input.website) return NextResponse.json({ ok: true });
     const quiz = assessQuiz(input);
     const message = snapshotEmail(quiz);
-    await sendBrevoEmail(quiz.email, message.subject, message.htmlContent);
-    return NextResponse.json({ ok: true });
+    console.info("AIQ snapshot request validated");
+    const messageId = await sendBrevoEmail(quiz.email, message.subject, message.htmlContent);
+    console.info("AIQ snapshot accepted by Brevo", { messageIdSuffix: messageId.slice(-12) });
+    return NextResponse.json({ ok: true, acceptedForDelivery: true });
   } catch (error) {
     if (/Invalid quiz|Invalid audience|Enter a valid email/.test(error.message)) {
       return NextResponse.json({ error: error.message }, { status: 400 });
