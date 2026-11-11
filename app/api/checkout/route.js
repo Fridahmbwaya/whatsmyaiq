@@ -20,7 +20,6 @@ export async function POST(request) {
     const origin = new URL(request.url).origin;
     const form = new URLSearchParams();
     form.set("mode", "payment");
-    form.set("payment_method_types[0]", "card");
     form.set("customer_email", quiz.email);
     form.set("line_items[0][price_data][currency]", "usd");
     form.set("line_items[0][price_data][unit_amount]", "2499");
