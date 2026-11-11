@@ -35,7 +35,7 @@ export async function GET() {
     const ok = response.ok && typeof body.messageId === "string";
     console.info("AIQ Brevo drop-mode smoke test", { accepted: ok, status: response.status, code: body.code || null });
     return NextResponse.json({
-      ok, providerStatus: response.status, providerCode: body.code || null, deliveryAttempted: false
+      ok, providerStatus: response.status, providerCode: body.code || null, failureReason: /key not found/i.test(String(body.message || "")) ? "key_not_found" : /access denied|permission/i.test(String(body.message || "")) ? "permission_denied" : /ip address|ip restriction/i.test(String(body.message || "")) ? "ip_restriction" : /invalid key/i.test(String(body.message || "")) ? "invalid_key" : "other", deliveryAttempted: false
     }, { status: ok ? 200 : 502, headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("AIQ Brevo drop-mode smoke test network error", error.name);
