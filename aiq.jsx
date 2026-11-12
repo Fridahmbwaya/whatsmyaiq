@@ -948,7 +948,9 @@ export default function WhatsmyAIQ() {
                   <p style={{fontSize:".83rem",color:"#555",lineHeight:1.5}}>Check your inbox for your personality breakdown and tailored starting point. For a deeper diagnosis, the full report goes further.</p>
                 </div>
                 <div style={{background:"#fff",border:`1.5px solid ${tier.accentColor}60`,borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:`0 7px 24px ${tier.accentColor}13`}}>
-                  <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"10px",fontWeight:600}}>The $24.99 deep-dive adds:</p>
+                  <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:tier.color,marginBottom:"7px",fontWeight:800}}>BEYOND YOUR SCORE · $24.99</p>
+                  <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.5rem",lineHeight:1.15,color:"#172238",marginBottom:"9px"}}>Turn your AIQ into a plan.</h3>
+                  <p style={{fontSize:".84rem",color:"#5F6C78",lineHeight:1.6,marginBottom:"14px"}}>Your free profile highlights your patterns. Your deep dive turns them into practical steps—starting with {growthArea?.label?.toLowerCase() || "your next opportunity"}.</p>
                   {[`Deep-dive into four AIQ dimensions in your ${audienceLabel} context`,"Evidence-based interpretation of your answers","Three relevant AI use cases and capability gaps","Your fastest practical win this week","A 7-day action plan and 30-day growth roadmap","Recommended learning areas to reach the next level"].map(item=>(
                     <div key={item} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"6px 0",borderBottom:"1px solid #F5F5F5",fontSize:".83rem",color:"#555"}}>
                       <span style={{color:tier.accentColor,fontWeight:700,flexShrink:0}}>→</span>{item}
