@@ -22,7 +22,7 @@ const TIERS = [
     min: 12, max: 23,
     label: "At Risk", emoji: "🚨",
     color: "#C0392B", lightColor: "#FDECEA", accentColor: "#E74C3C",
-    urgency: "HIGH RISK",
+    urgency: "EARLY EXPLORER",
     tagline: "AI isn't coming for your future. It's already reshaping it.",
     short: "The gap between you and someone who uses AI daily is widening every week.",
     emailTeaser: {
@@ -58,7 +58,7 @@ const TIERS = [
     min: 24, max: 34,
     label: "Operator", emoji: "⚡",
     color: "#D35400", lightColor: "#FEF5E7", accentColor: "#E67E22",
-    urgency: "MODERATE RISK",
+    urgency: "BUILDING MOMENTUM",
     tagline: "You've used AI. But you're only seeing the surface.",
     short: "ChatGPT is not an AI strategy. There's a whole world beyond it you haven't touched.",
     emailTeaser: {
@@ -94,7 +94,7 @@ const TIERS = [
     min: 35, max: 43,
     label: "Navigator", emoji: "🌐",
     color: "#1A6B8A", lightColor: "#EBF5FB", accentColor: "#2E86AB",
-    urgency: "LOW RISK",
+    urgency: "GROWING CONFIDENCE",
     tagline: "You know more than most. Now it's time to go deeper.",
     short: "You're in the top 25% — but the Architects are pulling away.",
     emailTeaser: {
@@ -168,7 +168,7 @@ const TIERS = [
     min: 51, max: 60,
     label: "Vanguard", emoji: "🚀",
     color: "#0E6655", lightColor: "#E8F8F5", accentColor: "#1ABC9C",
-    urgency: "PROTECTED",
+    urgency: "AI FRONTRUNNER",
     tagline: "AI isn't your threat. It's your weapon.",
     short: "You're the person others are trying to catch. Don't slow down.",
     emailTeaser: {
@@ -765,7 +765,8 @@ export default function WhatsmyAIQ() {
     .glitch.active::after{opacity:.55;animation:glitch1 .15s steps(1) forwards;}
 
     .tier-avatar{animation:avatarIn .7s cubic-bezier(0.175,0.885,0.32,1.275) forwards;width:100%;border-radius:16px;object-fit:cover;display:block;}
-    .tier-avatar-float{animation:avatarIn .7s cubic-bezier(0.175,0.885,0.32,1.275) forwards, float 4s 0.7s ease-in-out infinite;}
+    .tier-avatar-float{animation:float 4.6s ease-in-out infinite;will-change:transform;}
+    @media (prefers-reduced-motion:reduce){.tier-avatar-float{animation:none}.tier-avatar{animation:none}}
 
     .lcard{background:#fff;border:1px solid #EBEBEB;border-radius:14px;padding:22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
     .lslabel{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-family:'DM Sans',sans-serif;font-weight:700;}
@@ -886,9 +887,11 @@ export default function WhatsmyAIQ() {
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
 
-            {/* Hero image */}
-            <div className="fu1" style={{marginBottom:"22px",borderRadius:"16px",overflow:"hidden",height:"300px",background:"#0E1425"}}>
-              <img src={tierImage} alt={tier.personality.title} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:tier.label==="Architect"?"center top":"center",display:"block"}}/>
+            {/* Natural image proportions avoid cropping heads; float animates the whole portrait, not the image crop. */}
+            <div className="fu1" style={{marginBottom:"22px",padding:"6px 0 8px"}}>
+              <div className="tier-avatar-float" style={{borderRadius:"16px",overflow:"hidden",background:tier.lightColor,boxShadow:`0 12px 34px ${tier.accentColor}1D`}}>
+                <img src={tierImage} alt={tier.personality.title} className="tier-avatar" style={{width:"100%",height:"auto",display:"block"}}/>
+              </div>
             </div>
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
 
@@ -902,15 +905,15 @@ export default function WhatsmyAIQ() {
             </div>
             <p className="fu3" style={{fontSize:".75rem",color:"#BDBDBD",marginBottom:"24px",textAlign:"right"}}>Score: {totalScore}/{maxScore}</p>
 
-            <div className="fu3" style={{background:"#121727",color:"#fff",borderRadius:"18px",padding:"22px",marginBottom:"18px"}}>
-              <div style={{fontSize:".69rem",letterSpacing:".14em",textTransform:"uppercase",color:"#9ADFE8",fontWeight:800,marginBottom:"10px"}}>Your AIQ personality · First look</div>
+            <div className="fu3" style={{background:`linear-gradient(135deg, ${tier.color}, #121827)`,color:"#fff",borderRadius:"18px",padding:"22px",marginBottom:"18px",border:`1px solid ${tier.accentColor}55`,boxShadow:`0 12px 24px ${tier.accentColor}18`}}>
+              <div style={{fontSize:".69rem",letterSpacing:".14em",textTransform:"uppercase",color:tier.lightColor,fontWeight:800,marginBottom:"10px"}}>Your AIQ personality · First look</div>
               <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.5rem",fontWeight:900,letterSpacing:".03em",marginBottom:"10px"}}>{tier.personality.title}</div>
               <p style={{fontSize:".9rem",lineHeight:1.7,color:"#DDE3EC",marginBottom:"8px"}}>{persona.nudge}</p>
-              <p style={{fontSize:".78rem",color:"#96A5B6"}}>Your self-reported answers point to a bigger pattern. Your email explains what it means for you.</p>
+              <p style={{fontSize:".78rem",color:"#E4E8ED"}}>Your self-reported answers point to a bigger pattern. Your email explains what it means for you.</p>
             </div>
 
-            <div className="fu3" style={{background:"#fff",border:"1.5px solid #E8EAF0",borderRadius:"16px",padding:"20px",marginBottom:"18px"}}>
-              <div style={{fontSize:".68rem",color:"#818C9B",textTransform:"uppercase",letterSpacing:".12em",fontWeight:800,marginBottom:"6px"}}>Your AIQ DNA</div>
+            <div className="fu3" style={{background:"#fff",border:`1.5px solid ${tier.accentColor}50`,borderRadius:"16px",padding:"20px",marginBottom:"18px",boxShadow:`0 5px 22px ${tier.accentColor}10`}}>
+              <div style={{fontSize:".68rem",color:tier.color,textTransform:"uppercase",letterSpacing:".12em",fontWeight:800,marginBottom:"6px"}}>Your AIQ DNA</div>
               <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.5rem",fontWeight:900,color:"#16202B",marginBottom:"4px"}}>Four signals. One bigger picture.</h3>
               <p style={{fontSize:".79rem",lineHeight:1.5,color:"#657383",marginBottom:"18px"}}>These are self-reported readiness indicators, not a formal ability test. Discover how they connect in your personalised email.</p>
               {dimensions.map((dim) => (
@@ -920,7 +923,7 @@ export default function WhatsmyAIQ() {
                     <span style={{fontSize:".82rem",fontWeight:800,color:tier.color}}>{dim.score}/{dim.max}</span>
                   </div>
                   <div style={{height:"8px",background:"#ECF0F6",borderRadius:"8px",overflow:"hidden"}}>
-                    <div style={{width:`${100*dim.score/dim.max}%`,height:"100%",background:dim.id==="foundations"?"#5177E7":dim.id==="application"?"#16A6B3":dim.id==="judgment"?"#7D62CD":"#E6A64D",borderRadius:"8px"}}/>
+                    <div style={{width:`${100*dim.score/dim.max}%`,height:"100%",background:`linear-gradient(90deg, ${tier.color}, ${tier.accentColor})`,borderRadius:"8px"}}/>
                   </div>
                 </div>
               ))}
@@ -940,11 +943,11 @@ export default function WhatsmyAIQ() {
               </div>
             ) : (
               <div className="fu4">
-                <div style={{background:"#F0FFF6",border:"1.5px solid #A8E6C4",borderRadius:"14px",padding:"16px 20px",marginBottom:"16px"}}>
-                  <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.05rem",color:"#27AE60",marginBottom:"4px",textTransform:"uppercase",letterSpacing:".03em"}}>✓ Your AIQ profile is on its way to {email}</p>
+                <div style={{background:tier.lightColor,border:`1.5px solid ${tier.accentColor}75`,borderRadius:"14px",padding:"16px 20px",marginBottom:"16px"}}>
+                  <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.05rem",color:tier.color,marginBottom:"4px",textTransform:"uppercase",letterSpacing:".03em"}}>✓ Your AIQ profile is on its way to {email}</p>
                   <p style={{fontSize:".83rem",color:"#555",lineHeight:1.5}}>Check your inbox for your personality breakdown and tailored starting point. For a deeper diagnosis, the full report goes further.</p>
                 </div>
-                <div style={{background:"#fff",border:"1.5px solid #EBEBEB",borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:"0 1px 4px rgba(0,0,0,.04)"}}>
+                <div style={{background:"#fff",border:`1.5px solid ${tier.accentColor}60`,borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:`0 7px 24px ${tier.accentColor}13`}}>
                   <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"10px",fontWeight:600}}>The $24.99 deep-dive adds:</p>
                   {[`Deep-dive into four AIQ dimensions in your ${audienceLabel} context`,"Evidence-based interpretation of your answers","Three relevant AI use cases and capability gaps","Your fastest practical win this week","A 7-day action plan and 30-day growth roadmap","Recommended learning areas to reach the next level"].map(item=>(
                     <div key={item} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"6px 0",borderBottom:"1px solid #F5F5F5",fontSize:".83rem",color:"#555"}}>
