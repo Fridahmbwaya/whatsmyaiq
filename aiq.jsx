@@ -17,6 +17,16 @@ const TIER_IMAGES = {
   "Vanguard": "/images/leader-fixed.webp",
 };
 
+// Presentation-only adjustments. These never alter or replace the original illustrations.
+// A uniform landscape frame and modest per-tier scale preserve every face and the original art.
+const TIER_IMAGE_SCALE = {
+  "At Risk": 0.86,
+  "Operator": 0.74,
+  "Navigator": 0.86,
+  "Architect": 0.86,
+  "Vanguard": 1,
+};
+
 const TIERS = [
   {
     min: 12, max: 23,
@@ -750,6 +760,10 @@ export default function WhatsmyAIQ() {
     .next-dark.on{background:#00D4FF;color:#fff;}
     .next-dark.on:hover{background:#00AACC;transform:translateY(-1px);}
     .next-dark.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.34);cursor:pointer;}
+    /* Same pointer and focus behavior across quiz answers and navigation.
+       Avoid text-selection cursors when moving across an option's text. */
+    .opt,.opt *, .next-dark,.next-dark *{cursor:pointer!important;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
+    .opt:focus-visible,.next-dark:focus-visible{outline:3px solid #72E9F9;outline-offset:3px;}
 
     .cta-dark{background:#00D4FF;color:#fff;border:none;border-radius:8px;padding:16px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
     .cta-dark:hover{background:#00AACC;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,.35);}
@@ -893,13 +907,11 @@ export default function WhatsmyAIQ() {
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
 
-            {/* A shared 1000:560 presentation frame for all five personalities.
-                Tall source art is contained in the frame (never cropped or zoomed).
-                Vanguard's existing landscape artwork fills the same frame. */}
+            {/* Identical landscape frame for all tiers. Original image files are untouched.
+                Scale is CSS-only, so Operator isn't oversized and faces stay fully visible. */}
             <div className="fu1" style={{marginBottom:"22px",padding:"6px 0 8px"}}>
               <div className="tier-avatar-float" style={{position:"relative",width:"100%",aspectRatio:"1000 / 560",borderRadius:"16px",overflow:"hidden",background:`linear-gradient(125deg, ${tier.lightColor} 0%, #FFFFFF 52%, ${tier.lightColor} 100%)`,border:`1px solid ${tier.accentColor}35`,boxShadow:`0 12px 34px ${tier.accentColor}1D`}}>
-                {tier.label !== "Vanguard" && <img src={tierImage} alt="" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center",opacity:0.10,filter:"blur(12px)",pointerEvents:"none"}}/>}
-                <img src={tierImage} alt={tier.personality.title} style={{position:"relative",width:"100%",height:"100%",objectFit:"contain",objectPosition:"center center",display:"block"}}/>
+                <img src={tierImage} alt={tier.personality.title} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",objectPosition:"center center",transform:`scale(${TIER_IMAGE_SCALE[tier.label] ?? 1})`,transformOrigin:"center center",display:"block"}}/>
               </div>
             </div>
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
