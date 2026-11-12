@@ -743,13 +743,13 @@ export default function WhatsmyAIQ() {
     .audience-btn:hover{background:rgba(255,255,255,.055);border-color:rgba(0,212,255,.35);transform:translateX(4px);}
 
     .opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 17px;margin-bottom:8px;color:rgba(215,215,230,.62);font-size:.91rem;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1.4;}
-    .opt:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:#fff;transform:translateX(3px);}
-    .opt.sel{background:rgba(0,212,255,.09);border-color:rgba(0,212,255,.42);color:#FF5555;}
+    .opt:hover{background:rgba(255,255,255,.06);border-color:rgba(0,212,255,.6);color:#fff;}
+    .opt.sel{background:rgba(0,212,255,.13);border-color:#00D4FF;color:#FFFFFF;box-shadow:inset 3px 0 0 #00D4FF;}
 
     .next-dark{width:100%;padding:14px;border-radius:8px;border:none;font-weight:800;font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;margin-top:5px;cursor:pointer;transition:all .15s;}
     .next-dark.on{background:#00D4FF;color:#fff;}
     .next-dark.on:hover{background:#00AACC;transform:translateY(-1px);}
-    .next-dark.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.16);cursor:not-allowed;}
+    .next-dark.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.34);cursor:pointer;}
 
     .cta-dark{background:#00D4FF;color:#fff;border:none;border-radius:8px;padding:16px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
     .cta-dark:hover{background:#00AACC;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,.35);}
@@ -871,7 +871,7 @@ export default function WhatsmyAIQ() {
             <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#E8E8F0"}}>WHAT'S MY <span style={{color:"#00D4FF"}}>AIQ</span></div>
             <div style={{fontSize:".68rem",color:"rgba(0,212,255,.5)",letterSpacing:".08em",textTransform:"uppercase"}}>AIQ Assessment</div>
           </div>
-          <div style={{maxWidth:"580px",margin:"0 auto",padding:"28px 20px 60px",transition:"opacity .2s,transform .2s",opacity:animIn?1:0,transform:animIn?"translateY(0)":"translateY(10px)"}}>
+          <div style={{maxWidth:"580px",margin:"0 auto",padding:"28px 20px 60px",transition:"opacity .16s",opacity:animIn?1:0}}>
             <div style={{display:"flex",gap:"4px",marginBottom:"5px"}}>
               {QUESTIONS.map((_,i)=><div key={i} style={{flex:1,height:"3px",borderRadius:"2px",background:i<current?"#00D4FF":i===current?"rgba(0,212,255,.38)":"rgba(255,255,255,.06)",transition:"background .3s"}}/>)}
             </div>
@@ -893,10 +893,13 @@ export default function WhatsmyAIQ() {
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
 
-            {/* Natural image proportions avoid cropping heads; float animates the whole portrait, not the image crop. */}
+            {/* A shared 1000:560 presentation frame for all five personalities.
+                Tall source art is contained in the frame (never cropped or zoomed).
+                Vanguard's existing landscape artwork fills the same frame. */}
             <div className="fu1" style={{marginBottom:"22px",padding:"6px 0 8px"}}>
-              <div className="tier-avatar-float" style={{borderRadius:"16px",overflow:"hidden",background:tier.lightColor,boxShadow:`0 12px 34px ${tier.accentColor}1D`}}>
-                <img src={tierImage} alt={tier.personality.title} className="tier-avatar" style={{width:"100%",height:"auto",display:"block"}}/>
+              <div className="tier-avatar-float" style={{position:"relative",width:"100%",aspectRatio:"1000 / 560",borderRadius:"16px",overflow:"hidden",background:`linear-gradient(125deg, ${tier.lightColor} 0%, #FFFFFF 52%, ${tier.lightColor} 100%)`,border:`1px solid ${tier.accentColor}35`,boxShadow:`0 12px 34px ${tier.accentColor}1D`}}>
+                {tier.label !== "Vanguard" && <img src={tierImage} alt="" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center",opacity:0.10,filter:"blur(12px)",pointerEvents:"none"}}/>}
+                <img src={tierImage} alt={tier.personality.title} style={{position:"relative",width:"100%",height:"100%",objectFit:"contain",objectPosition:"center center",display:"block"}}/>
               </div>
             </div>
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
