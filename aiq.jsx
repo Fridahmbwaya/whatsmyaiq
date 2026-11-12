@@ -821,7 +821,7 @@ export default function WhatsmyAIQ() {
               <div className="ticker-inner">{[...tickers,...tickers].map((t,i)=><span key={i} className="t-item">{t} <span style={{color:"rgba(0,212,255,.3)"}}>◆</span></span>)}</div>
             </div>
             <div className="fu4" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px",marginBottom:"28px"}}>
-              {[{num:"8",label:"Questions"},{num:"2 MIN",label:"To complete"},{num:"FREE",label:"To start"}].map(s=>(
+              {[{num:String(QUESTIONS.length),label:"Questions"},{num:"3 MIN",label:"To complete"},{num:"FREE",label:"To start"}].map(s=>(
                 <div key={s.label} className="sbox">
                   <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.45rem",fontWeight:900,color:"#fff"}}>{s.num}</div>
                   <div style={{fontSize:".7rem",color:"rgba(255,255,255,.28)",textTransform:"uppercase",letterSpacing:".07em",marginTop:"2px"}}>{s.label}</div>
@@ -830,7 +830,7 @@ export default function WhatsmyAIQ() {
             </div>
             <div className="fu5" style={{display:"flex",flexDirection:"column",alignItems:"stretch",gap:"9px"}}>
               <button className="cta-dark" style={{width:"100%"}} onClick={()=>setScreen("audience")}>Discover Your AIQ →</button>
-              <p style={{textAlign:"center",fontSize:".74rem",color:"rgba(255,255,255,.2)"}}>Takes 2 minutes · Free · No signup required</p>
+              <p style={{textAlign:"center",fontSize:".74rem",color:"rgba(255,255,255,.2)"}}>Takes about 3 minutes · Free to start · Email for your personal profile</p>
             </div>
           </div>
         </div>
