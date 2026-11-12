@@ -22,7 +22,7 @@ test("personality email includes a polished HTML layout and all four scores", ()
   assert.match(email.htmlContent, /48/);
   assert.match(email.htmlContent, /60/);
   assert.match(email.htmlContent, /room to grow/i);
-  assert.match(email.htmlContent, /full report is being prepared for launch/);
+  assert.match(email.htmlContent, /FULL REPORT · COMING SOON/);
   assert.doesNotMatch(email.htmlContent, /<script/i);
 });
 
@@ -73,7 +73,7 @@ test("upsell clearly explains the paid report while respecting checkout launch g
     "A 30-day growth roadmap",
     "$24.99",
     "COMING SOON"
-  ]) assert.match(email.htmlContent, new RegExp(phrase, "i"));
+  ]) assert.ok(email.htmlContent.toLowerCase().includes(phrase.toLowerCase()), "Missing: " + phrase);
   assert.doesNotMatch(email.htmlContent,/EXPLORE YOUR FULL REPORT/);
   const live = renderFreeSnapshotEmail(quiz(4, "work"), {paymentsEnabled:true});
   assert.match(live.htmlContent,/EXPLORE YOUR FULL REPORT/);
