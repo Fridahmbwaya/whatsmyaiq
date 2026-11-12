@@ -10,7 +10,7 @@ test("all low answers map to At Risk, not an inflated tier", () => {
   const result = assessQuiz(payload(1));
   assert.equal(result.score, 12);
   assert.equal(result.tier.label, "At Risk");
-  assert.equal(result.responseDetails.length, 8);
+  assert.equal(result.responseDetails.length, 12);
 });
 
 test("all high answers map to Vanguard", () => {
