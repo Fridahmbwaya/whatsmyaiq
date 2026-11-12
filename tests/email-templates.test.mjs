@@ -61,3 +61,35 @@ test("paid report email includes all report sections", () => {
     assert.match(message.htmlContent,new RegExp(phrase,"i"));
   }
 });
+
+
+test("upsell clearly explains the paid report while respecting checkout launch gate", () => {
+  const email = renderFreeSnapshotEmail(quiz(4, "work"), {paymentsEnabled:false});
+  for (const phrase of [
+    "GO BEYOND YOUR SCORE",
+    "The story behind your score",
+    "Three use cases tailored to you",
+    "Your personal 7-day game plan",
+    "A 30-day growth roadmap",
+    "$24.99",
+    "COMING SOON"
+  ]) assert.match(email.htmlContent, new RegExp(phrase, "i"));
+  assert.doesNotMatch(email.htmlContent,/EXPLORE YOUR FULL REPORT/);
+  const live = renderFreeSnapshotEmail(quiz(4, "work"), {paymentsEnabled:true});
+  assert.match(live.htmlContent,/EXPLORE YOUR FULL REPORT/);
+});
+
+test("free emails use one consistent color for the tier and dimension indicators", () => {
+  const cases = [
+    [1, "#F77D80"],
+    [2, "#F6A955"],
+    [3, "#45BBD8"],
+    [4, "#AD8DF0"],
+    [5, "#4AE1BF"]
+  ];
+  for (const [points, accent] of cases) {
+    const email = renderFreeSnapshotEmail(quiz(points), {paymentsEnabled:false});
+    const matches = email.htmlContent.split(accent).length - 1;
+    assert.ok(matches >= 7, "tier " + points + " should consistently use " + accent);
+  }
+});
