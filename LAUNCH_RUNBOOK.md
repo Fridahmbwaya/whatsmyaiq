@@ -1,10 +1,10 @@
 # What's My AIQ — launch runbook
 
-What's My AIQ is a Next.js quiz and paid AI-readiness report product. It has five readiness tiers and four audiences. Users can see free results and level-specific reading, request a Brevo snapshot email, and buy a more detailed Anthropic-generated report via Stripe Checkout.
+What's My AIQ is a Next.js quiz and paid AI-readiness report product. It has five readiness tiers, four audiences, and twelve questions measuring four self-reported dimensions: AI foundations, practical application, critical judgment, and workflow/mindset. The website gives a concise personality and scorecard teaser; Brevo delivers the richer free email; a verified Stripe purchase unlocks the detailed Anthropic report.
 
 ## Architecture
 
-- Browser: 8-question assessment, free results and suggested reading.
+- Browser: 12-question / 60-point assessment, personality teaser and four capability scores (15 points each). Full interpretation, one action and two curated resources are sent by email—not given away before email capture.
 - \`POST /api/snapshot\`: server validates answers and sends a transactional free snapshot through Brevo. An email is only marked sent on a successful Brevo API response.
 - \`POST /api/checkout\`: validates the entire quiz server-side and creates a $24.99 Stripe-hosted payment session. The endpoint is **disabled** unless \`PAYMENTS_ENABLED=true\` and all service credentials are present.
 - \`GET /api/order-status?session_id=...\`: verifies Checkout Session with Stripe, returning only paid and fulfillment status. The browser **never** grants itself paid access from URL query parameters.
@@ -14,7 +14,7 @@ What's My AIQ is a Next.js quiz and paid AI-readiness report product. It has fiv
 
 Never place any secret in \`NEXT_PUBLIC_*\`, frontend code, or GitHub. Paid report generation only occurs on the backend and only after payment verification. The current MVP uses Stripe Checkout Session metadata to skip **sequential** duplicate webhook deliveries. This is **not a transactional lock**; concurrent deliveries or failure between Brevo acceptance and Stripe metadata update could send duplicate messages. Add a durable jobs/orders database with unique Stripe Checkout Session IDs before opening to substantial traffic. A durable workflow/queue is also recommended because Anthropic generation and Brevo delivery may exceed Stripe's webhook response timeout; monitor and retry failed events.
 
-The free snapshot route accepts submissions from the public internet and requires production-grade anti-abuse protection, such as a persistent rate limiter plus a CAPTCHA challenge, before promotion to a widely marketed launch. Transactional email does not auto-subscribe recipients to marketing.
+The free snapshot route accepts submissions from the public internet and requires production-grade anti-abuse protection, such as a persistent rate limiter plus a CAPTCHA challenge, before promotion to a widely marketed launch. Transactional email does not auto-subscribe recipients to marketing. A sample design is available on protected Vercel preview at `/api/email-preview?tier=Architect`; this endpoint returns only fabricated example data and 404 in Production.
 
 ## Configure Vercel
 
@@ -64,4 +64,4 @@ The backend currently limits Checkout to card payments; the second event is incl
 
 ## Future revenue sequence
 
-Free AIQ snapshot and resource list → $24.99 personalised report → targeted paid learning modules (planned, not yet sold). Modules should be organized by readiness tier and audience, with practical exercises and measurable completion evidence.
+Free AIQ personality teaser → rich personalised email with four dimensions → $24.99 detailed report and action plan → targeted paid learning modules (planned, not yet sold). Modules should be organized by readiness tier and audience, with practical exercises and measurable completion evidence.
