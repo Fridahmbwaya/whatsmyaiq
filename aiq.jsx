@@ -14,7 +14,7 @@ const TIER_IMAGES = {
   "Operator": "/images/operator.png",
   "Navigator": "/images/navigator.png",
   "Architect": "/images/architect.png",
-  "Vanguard": "/images/leader.png",
+  "Vanguard": "/images/leader-fixed.webp",
 };
 
 const TIERS = [
