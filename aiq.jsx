@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { QUESTIONS, LEVEL_GUIDES } from "./lib/assessment";
+import { QUESTIONS, calculateDimensions, PERSONA_PROFILES } from "./lib/assessment";
 
 const AUDIENCES = [
   { id: "student", emoji: "📚", label: "Student", sub: "School, university, coursework, or studying" },
@@ -19,7 +19,7 @@ const TIER_IMAGES = {
 
 const TIERS = [
   {
-    min: 8, max: 15,
+    min: 12, max: 23,
     label: "At Risk", emoji: "🚨",
     color: "#C0392B", lightColor: "#FDECEA", accentColor: "#E74C3C",
     urgency: "HIGH RISK",
@@ -55,7 +55,7 @@ const TIERS = [
     },
   },
   {
-    min: 16, max: 22,
+    min: 24, max: 34,
     label: "Operator", emoji: "⚡",
     color: "#D35400", lightColor: "#FEF5E7", accentColor: "#E67E22",
     urgency: "MODERATE RISK",
@@ -91,7 +91,7 @@ const TIERS = [
     },
   },
   {
-    min: 23, max: 28,
+    min: 35, max: 43,
     label: "Navigator", emoji: "🌐",
     color: "#1A6B8A", lightColor: "#EBF5FB", accentColor: "#2E86AB",
     urgency: "LOW RISK",
@@ -128,7 +128,7 @@ const TIERS = [
     },
   },
   {
-    min: 29, max: 33,
+    min: 44, max: 50,
     label: "Architect", emoji: "🧠",
     color: "#4A235A", lightColor: "#F5EEF8", accentColor: "#7D3C98",
     urgency: "ADVANCED",
@@ -165,7 +165,7 @@ const TIERS = [
     },
   },
   {
-    min: 34, max: 40,
+    min: 51, max: 60,
     label: "Vanguard", emoji: "🚀",
     color: "#0E6655", lightColor: "#E8F8F5", accentColor: "#1ABC9C",
     urgency: "PROTECTED",
@@ -619,12 +619,17 @@ export default function WhatsmyAIQ() {
   const totalScore = answers.reduce((s, a) => s + a, 0);
   const tier = getTier(totalScore);
   const maxScore = QUESTIONS.reduce((s, q) => s + Math.max(...q.options.map(o => o.points)), 0);
-  const pct = Math.round(((totalScore - 8) / (maxScore - 8)) * 100);
+  const pct = Math.round(Math.max(0, (totalScore - QUESTIONS.length) / (maxScore - QUESTIONS.length)) * 100);
   const modules = audience ? getModules(tier, audience) : [];
   const audienceMeta = AUDIENCE_META[audience] || AUDIENCE_META.work;
   const audienceLabel = audienceMeta.labelLong;
   const freeResult = getFreeResultCopy(tier.label, audience);
   const tierImage = TIER_IMAGES[tier.label];
+  const persona = PERSONA_PROFILES[tier.label];
+  const dimensions = answers.length === QUESTIONS.length ? calculateDimensions(answers) : [];
+  const rankedDimensions = [...dimensions].sort((a,b) => b.score / b.max - a.score / a.max);
+  const strongest = rankedDimensions[0];
+  const growthArea = rankedDimensions[rankedDimensions.length - 1];
 
   useEffect(() => {
     if (screen === "email") setTimeout(() => setBarWidth(Math.max(pct, 5)), 400);
@@ -882,8 +887,8 @@ export default function WhatsmyAIQ() {
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
 
             {/* Hero image */}
-            <div className="fu1" style={{marginBottom:"24px",borderRadius:"16px",overflow:"hidden",maxHeight:"380px"}}>
-              <img src={tierImage} alt={tier.personality.title} className="tier-avatar-float" style={{width:"100%",maxHeight:"380px",objectFit:"cover",objectPosition:"center",borderRadius:"16px"}}/>
+            <div className="fu1" style={{marginBottom:"24px",borderRadius:"16px",overflow:"hidden",height:"340px",background:"#0E1425"}}>
+              <img src={tierImage} alt={tier.personality.title} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block"}}/>
             </div>
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
 
@@ -897,66 +902,51 @@ export default function WhatsmyAIQ() {
             </div>
             <p className="fu3" style={{fontSize:".75rem",color:"#BDBDBD",marginBottom:"24px",textAlign:"right"}}>Score: {totalScore}/{maxScore}</p>
 
-            <div className="fu3 result-stack">
-              <div className="result-card">
-                <p className="result-card-title">What this means for you</p>
-                {freeResult.means.map((paragraph) => (
-                  <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-
-              <div className="result-card">
-                <p className="result-card-title">What you're missing out on</p>
-                <ul className="result-list">
-                  {freeResult.missing.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="result-card">
-                <p className="result-card-title">Your next level</p>
-                {freeResult.next.map((paragraph) => (
-                  <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>
-                    {paragraph}
-                  </p>
-                ))}
-                <p className="result-note">
-                  Your full gap analysis, learning path, and 7-day action plan go much deeper than this. Get your free snapshot first.
-                </p>
-              </div>
+            <div className="fu3" style={{background:"#121727",color:"#fff",borderRadius:"18px",padding:"22px",marginBottom:"18px"}}>
+              <div style={{fontSize:".69rem",letterSpacing:".14em",textTransform:"uppercase",color:"#9ADFE8",fontWeight:800,marginBottom:"10px"}}>Your AIQ personality · First look</div>
+              <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.5rem",fontWeight:900,letterSpacing:".03em",marginBottom:"10px"}}>{tier.personality.title}</div>
+              <p style={{fontSize:".9rem",lineHeight:1.7,color:"#DDE3EC",marginBottom:"8px"}}>{persona.nudge}</p>
+              <p style={{fontSize:".78rem",color:"#96A5B6"}}>Your self-reported answers point to a bigger pattern. Your email explains what it means for you.</p>
             </div>
 
-            <div className="result-card" style={{marginBottom:"18px"}}>
-              <p className="result-card-title">Start improving today</p>
-              <p className="result-card-copy" style={{marginBottom:"12px"}}>{LEVEL_GUIDES[tier.label]?.tip}</p>
-              <p className="result-card-title">Reading for your level</p>
-              {(LEVEL_GUIDES[tier.label]?.reading || []).map(item => (
-                <p key={item.url} style={{margin:"8px 0",fontSize:".86rem"}}>
-                  <a href={item.url} target="_blank" rel="noopener noreferrer" style={{color:"#1771A8",textDecoration:"underline"}}>{item.title}</a>
-                </p>
+            <div className="fu3" style={{background:"#fff",border:"1.5px solid #E8EAF0",borderRadius:"16px",padding:"20px",marginBottom:"18px"}}>
+              <div style={{fontSize:".68rem",color:"#818C9B",textTransform:"uppercase",letterSpacing:".12em",fontWeight:800,marginBottom:"6px"}}>Your AIQ DNA</div>
+              <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.5rem",fontWeight:900,color:"#16202B",marginBottom:"4px"}}>Four signals. One bigger picture.</h3>
+              <p style={{fontSize:".79rem",lineHeight:1.5,color:"#657383",marginBottom:"18px"}}>These are self-reported readiness indicators, not a formal ability test. Discover how they connect in your personalised email.</p>
+              {dimensions.map((dim) => (
+                <div key={dim.id} style={{marginBottom:"15px"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:"10px",marginBottom:"6px",alignItems:"center"}}>
+                    <span style={{fontSize:".84rem",fontWeight:700,color:"#243142"}}>{dim.label}</span>
+                    <span style={{fontSize:".82rem",fontWeight:800,color:tier.color}}>{dim.score}/{dim.max}</span>
+                  </div>
+                  <div style={{height:"8px",background:"#ECF0F6",borderRadius:"8px",overflow:"hidden"}}>
+                    <div style={{width:`${100*dim.score/dim.max}%`,height:"100%",background:dim.id==="foundations"?"#5177E7":dim.id==="application"?"#16A6B3":dim.id==="judgment"?"#7D62CD":"#E6A64D",borderRadius:"8px"}}/>
+                  </div>
+                </div>
               ))}
+              <div style={{borderTop:"1px solid #E9ECF2",paddingTop:"14px",display:"flex",flexWrap:"wrap",gap:"12px",justifyContent:"space-between"}}>
+                <div><div style={{fontSize:".65rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".08em",color:"#8190A0"}}>Leading signal</div><div style={{fontSize:".88rem",fontWeight:700,color:"#16202B"}}>{strongest?.label}</div></div>
+                <div><div style={{fontSize:".65rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".08em",color:"#8190A0"}}>Room to grow</div><div style={{fontSize:".88rem",fontWeight:700,color:"#16202B"}}>{growthArea?.label}</div></div>
+              </div>
             </div>
 
             {!emailSubmitted ? (
               <div className="fu4">
-                <p style={{fontSize:".82rem",color:"#666",marginBottom:"10px"}}>Where should we send your free AIQ snapshot?</p>
+                <p style={{fontSize:".82rem",color:"#666",marginBottom:"10px"}}>Get the story behind your score—your personality profile, what each signal means, your strongest area and a practical next step. Free, straight to your inbox.</p>
                 <input className="email-input" type="email" placeholder="your@email.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitEmail()}/>
                 {emailError&&<p style={{fontSize:".78rem",color:"#E74C3C",marginBottom:"8px"}}>{emailError}</p>}
-                <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={submitEmail} disabled={emailLoading}>{emailLoading?"Sending Snapshot…":"Send My Free Snapshot →"}</button>
+                <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={submitEmail} disabled={emailLoading}>{emailLoading?"Preparing Your Profile…":"Email My Personal AIQ Profile →"}</button>
                 <p style={{textAlign:"center",fontSize:".72rem",color:"#BDBDBD",marginTop:"8px"}}>One assessment email. No marketing subscription.</p>
               </div>
             ) : (
               <div className="fu4">
                 <div style={{background:"#F0FFF6",border:"1.5px solid #A8E6C4",borderRadius:"14px",padding:"16px 20px",marginBottom:"16px"}}>
-                  <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.05rem",color:"#27AE60",marginBottom:"4px",textTransform:"uppercase",letterSpacing:".03em"}}>✓ Snapshot accepted for delivery to {email}</p>
-                  <p style={{fontSize:".83rem",color:"#555",lineHeight:1.5}}>Check your inbox in a few minutes. Ready to see the full picture now?</p>
+                  <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.05rem",color:"#27AE60",marginBottom:"4px",textTransform:"uppercase",letterSpacing:".03em"}}>✓ Your AIQ profile is on its way to {email}</p>
+                  <p style={{fontSize:".83rem",color:"#555",lineHeight:1.5}}>Check your inbox for your personality breakdown and tailored starting point. For a deeper diagnosis, the full report goes further.</p>
                 </div>
                 <div style={{background:"#fff",border:"1.5px solid #EBEBEB",borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:"0 1px 4px rgba(0,0,0,.04)"}}>
-                  <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"10px",fontWeight:600}}>Your full report includes:</p>
-                  {[`Your ${tier.personality.title} profile — what it means in your ${audienceLabel} context`,"Your exact capability gaps with specific examples","What someone one tier above you can do that you currently can't","Your fastest win this week","3 learning modules sequenced for your level and path","A 7-day action plan built for you"].map(item=>(
+                  <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"10px",fontWeight:600}}>The $24.99 deep-dive adds:</p>
+                  {[`Deep-dive into four AIQ dimensions in your ${audienceLabel} context`,"Evidence-based interpretation of your answers","Three relevant AI use cases and capability gaps","Your fastest practical win this week","A 7-day action plan and 30-day growth roadmap","Recommended learning areas to reach the next level"].map(item=>(
                     <div key={item} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"6px 0",borderBottom:"1px solid #F5F5F5",fontSize:".83rem",color:"#555"}}>
                       <span style={{color:tier.accentColor,fontWeight:700,flexShrink:0}}>→</span>{item}
                     </div>
