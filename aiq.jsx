@@ -711,7 +711,7 @@ export default function WhatsmyAIQ() {
   }
 
   const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);} }
     @keyframes scanline { 0%{top:-2px;}100%{top:100%;} }
@@ -731,7 +731,13 @@ export default function WhatsmyAIQ() {
     .fu6{animation:fadeUp .4s .35s ease forwards;opacity:0;}
 
     .dark-screen{background:#0D0F14;color:#E8E8F0;min-height:100vh;}
-    .light-screen{background:#FAFAF7;color:#1A1A1A;min-height:100vh;}
+    .light-screen{background:#FAFAF7;color:#172238;min-height:100vh;font-family:'DM Sans',Arial,sans-serif;-webkit-font-smoothing:auto;text-rendering:optimizeLegibility;}
+    /* Keep result text on the main rendering layer. The old fadeUp animation
+       retained a transform on every heading and scorecard, which softened glyphs
+       on some high-density displays. The portrait keeps its separate float. */
+    .light-screen .fu1,.light-screen .fu2,.light-screen .fu3,.light-screen .fu4{
+      animation:none;opacity:1;transform:none;filter:none;
+    }
 
     .audience-btn{display:flex;align-items:center;gap:14px;width:100%;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .15s;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:10px;color:#E8E8F0;}
     .audience-btn:hover{background:rgba(255,255,255,.055);border-color:rgba(0,212,255,.35);transform:translateX(4px);}
@@ -914,13 +920,13 @@ export default function WhatsmyAIQ() {
 
             <div className="fu3" style={{background:"#fff",border:`1.5px solid ${tier.accentColor}50`,borderRadius:"16px",padding:"20px",marginBottom:"18px",boxShadow:`0 5px 22px ${tier.accentColor}10`}}>
               <div style={{fontSize:".68rem",color:tier.color,textTransform:"uppercase",letterSpacing:".12em",fontWeight:800,marginBottom:"6px"}}>Your AIQ DNA</div>
-              <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.5rem",fontWeight:900,color:"#16202B",marginBottom:"4px"}}>Four signals. One bigger picture.</h3>
-              <p style={{fontSize:".79rem",lineHeight:1.5,color:"#657383",marginBottom:"18px"}}>These are self-reported readiness indicators, not a formal ability test. Discover how they connect in your personalised email.</p>
+              <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.65rem",fontWeight:900,color:"#101827",marginBottom:"7px",lineHeight:1.2}}>Four signals. One bigger picture.</h3>
+              <p style={{fontSize:".88rem",lineHeight:1.65,color:"#42526A",marginBottom:"20px"}}>These are self-reported readiness indicators, not a formal ability test. Discover how they connect in your personalised email.</p>
               {dimensions.map((dim) => (
                 <div key={dim.id} style={{marginBottom:"15px"}}>
                   <div style={{display:"flex",justifyContent:"space-between",gap:"10px",marginBottom:"6px",alignItems:"center"}}>
-                    <span style={{fontSize:".84rem",fontWeight:700,color:"#243142"}}>{dim.label}</span>
-                    <span style={{fontSize:".82rem",fontWeight:800,color:tier.color}}>{dim.score}/{dim.max}</span>
+                    <span style={{fontSize:".93rem",fontWeight:700,color:"#1C293A"}}>{dim.label}</span>
+                    <span style={{fontSize:".94rem",fontWeight:800,color:tier.color,fontVariantNumeric:"tabular-nums"}}>{dim.score}/{dim.max}</span>
                   </div>
                   <div style={{height:"8px",background:"#ECF0F6",borderRadius:"8px",overflow:"hidden"}}>
                     <div style={{width:`${100*dim.score/dim.max}%`,height:"100%",background:`linear-gradient(90deg, ${tier.color}, ${tier.accentColor})`,borderRadius:"8px"}}/>
@@ -928,8 +934,8 @@ export default function WhatsmyAIQ() {
                 </div>
               ))}
               <div style={{borderTop:"1px solid #E9ECF2",paddingTop:"14px",display:"flex",flexWrap:"wrap",gap:"12px",justifyContent:"space-between"}}>
-                <div><div style={{fontSize:".65rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".08em",color:"#8190A0"}}>Leading signal</div><div style={{fontSize:".88rem",fontWeight:700,color:"#16202B"}}>{strongest?.label}</div></div>
-                <div><div style={{fontSize:".65rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".08em",color:"#8190A0"}}>Room to grow</div><div style={{fontSize:".88rem",fontWeight:700,color:"#16202B"}}>{growthArea?.label}</div></div>
+                <div><div style={{fontSize:".74rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".07em",color:"#536780"}}>Leading signal</div><div style={{fontSize:".96rem",fontWeight:700,color:"#16202B",lineHeight:1.45}}>{strongest?.label}</div></div>
+                <div><div style={{fontSize:".74rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".07em",color:"#536780"}}>Room to grow</div><div style={{fontSize:".96rem",fontWeight:700,color:"#16202B",lineHeight:1.45}}>{growthArea?.label}</div></div>
               </div>
             </div>
 
