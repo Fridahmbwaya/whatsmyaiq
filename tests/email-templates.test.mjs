@@ -30,7 +30,7 @@ test("free email varies by audience and personality", () => {
   const student = renderFreeSnapshotEmail(quiz(1,"student"),{paymentsEnabled:false});
   const builder = renderFreeSnapshotEmail(quiz(5,"side"),{paymentsEnabled:false});
   assert.match(student.subject, /Bystander/);
-  assert.match(builder.subject, /Vanguard/);
+  assert.match(builder.subject, /The Leader/);
   assert.match(student.htmlContent, /In your studies/);
   assert.match(builder.htmlContent, /founder or side-project builder/);
 });
@@ -92,4 +92,49 @@ test("free emails use one consistent color for the tier and dimension indicators
     const matches = email.htmlContent.split(accent).length - 1;
     assert.ok(matches >= 7, "tier " + points + " should consistently use " + accent);
   }
+});
+
+test("all five email personalities match the quiz result names", () => {
+  const expected = [
+    [1, "The Bystander"],
+    [2, "The ChatGPT User"],
+    [3, "The Multi-Tool Switcher"],
+    [4, "The Builder"],
+    [5, "The Leader"]
+  ];
+  for (const [points, title] of expected) {
+    const result = quiz(points);
+    assert.equal(result.tier.personality, title);
+    const free = renderFreeSnapshotEmail(result);
+    assert.ok(free.subject.includes(title), "free subject should name " + title);
+  }
+});
+
+test("premium report includes the same personality read, audience and action plan", () => {
+  const assessment = quiz(5, "side");
+  const report = {
+    headline: "From personal mastery to measurable impact",
+    summary: "The sample answers suggest strong AI usage with an opportunity to measure outcomes.",
+    practice: ["Use AI daily", "Review outputs", "Document processes"],
+    strengths: ["Strong workflow habits", "Thoughtful verification", "Team leadership"],
+    gaps: ["Track impact", "Set governance", "Share methods"],
+    use_cases: ["Review support FAQs", "Automate follow-ups", "Benchmark workflow quality"],
+    fastest_win: "Pick a workflow and track its accuracy.",
+    actions: [
+      {day:"Day 1",action:"Choose a workflow"},
+      {day:"Day 3",action:"Measure accuracy"},
+      {day:"Day 7",action:"Review and improve"}
+    ],
+    thirty_day_plan: ["Set baseline", "Pilot improvement", "Review outcomes"],
+    verdict: "Keep building deliberately."
+  };
+  const message = renderPaidReportEmail(assessment, report);
+  for (const phrase of [
+    "The Leader", "From personal mastery to measurable impact",
+    "Your personality", "Your diagnosis", "AIQ DNA",
+    "Actionable opportunities", "Keep learning",
+    "founder or side-project builder", "Day 7", "30 days"
+  ]) assert.ok(message.htmlContent.includes(phrase), "missing paid report section: " + phrase);
+  assert.match(message.subject, /The Leader/);
+  assert.doesNotMatch(message.htmlContent, /<script/i);
 });
