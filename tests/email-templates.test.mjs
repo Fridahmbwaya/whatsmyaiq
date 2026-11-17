@@ -12,7 +12,7 @@ const quiz = (value, audience = "work") => assessQuiz({
 test("personality email includes a polished HTML layout and all four scores", () => {
   const result = quiz(4);
   const email = renderFreeSnapshotEmail(result, {paymentsEnabled:false});
-  assert.match(email.subject, /Architect/);
+  assert.match(email.subject, /The Builder/);
   assert.match(email.htmlContent, /WHAT'S MY/);
   assert.match(email.htmlContent, /Four dimensions/);
   assert.match(email.htmlContent, /AI foundations/);
