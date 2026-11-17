@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { QUESTIONS, calculateDimensions, PERSONA_PROFILES } from "./lib/assessment";
 
 const AUDIENCES = [
   { id: "student", emoji: "📚", label: "Student", sub: "School, university, coursework, or studying" },
@@ -8,110 +9,30 @@ const AUDIENCES = [
   { id: "both", emoji: "🔀", label: "A Mix of These", sub: "You use AI across school, work, and side projects — often all at once" },
 ];
 
-const QUESTIONS = [
-  {
-    id: 1,objectPosition:"50% 10%",borderRadius:"16px"
-    question: "When you hear AI is changing your field, what's your honest reaction?",
-    options: [
-      { text: "I'm ahead of it — I'm already building or using the tools doing the changing", points: 5 },
-      { text: "I'm aware and actively positioning myself ahead of it", points: 4 },
-      { text: "I know I should be doing more, but haven't made it a priority", points: 3 },
-      { text: "I feel behind and a bit anxious about it", points: 2 },
-      { text: "Honestly I try not to think about it", points: 1 },
-    ],
-  },
-  {
-    id: 2,
-    question: "How often do you actually use AI tools (ChatGPT, Claude, Gemini, etc.) right now?",
-    options: [
-      { text: "Multiple times a day — it's core to how I work or study", points: 5 },
-      { text: "Daily, for writing, research, or thinking through problems", points: 4 },
-      { text: "A few times a week — when I remember or have time", points: 3 },
-      { text: "Occasionally — I've tried it but it's not a real habit", points: 2 },
-      { text: "Barely at all", points: 1 },
-    ],
-  },
-  {
-    id: 3,
-    question: "Which best describes your knowledge of AI tools available right now?",
-    options: [
-      { text: "I know multiple tools deeply — and use each for different reasons", points: 5 },
-      { text: "I know a few tools well — and choose between them intentionally", points: 4 },
-      { text: "I mainly use ChatGPT — it's my default for almost everything", points: 3 },
-      { text: "I've heard of a few but mostly just use ChatGPT when I need something", points: 2 },
-      { text: "I don't really know what's out there beyond ChatGPT", points: 1 },
-    ],
-  },
-  {
-    id: 4,
-    question: "You need to research a complex topic and cite real sources. What do you actually do?",
-    options: [
-      { text: "I start with AI tools that surface sources, then verify key claims properly", points: 5 },
-      { text: "I start with AI, then verify the important claims independently", points: 4 },
-      { text: "I use AI and double-check only if something feels off", points: 3 },
-      { text: "I mostly rely on AI and don't verify much unless I have to", points: 2 },
-      { text: "I prefer not to use AI for serious research", points: 1 },
-    ],
-  },
-  {
-    id: 5,
-    question: "When you use AI, how would you describe your prompting style?",
-    options: [
-      { text: "I design prompts deliberately using structure and strategy", points: 5 },
-      { text: "I guide it as we go — pull, react, add context, iterate until it's right", points: 4 },
-      { text: "I start with a detailed prompt and refine based on the output", points: 3 },
-      { text: "I ask a clear question and try a few variations if needed", points: 2 },
-      { text: "I type what I need and take what I get", points: 1 },
-    ],
-  },
-  {
-    id: 6,
-    question: "AI gives you a confident, detailed answer — but something feels off. What do you do?",
-    options: [
-      { text: "I have a verification routine: cross-check, compare models, and flag uncertainty", points: 5 },
-      { text: "I dig into the specific claim that feels wrong and verify it properly", points: 4 },
-      { text: "I quickly spot-check the key facts", points: 3 },
-      { text: "I use it, but keep in mind that it may need checking", points: 2 },
-      { text: "I usually use it anyway — it's probably fine", points: 1 },
-    ],
-  },
-  {
-    id: 7,
-    question: "Have you connected AI into a repeatable system — notes, tasks, spreadsheets, automations, or workflows?",
-    options: [
-      { text: "I've built systems or automations that run without me", points: 5 },
-      { text: "AI is embedded into my regular workflow in a structured way", points: 4 },
-      { text: "I use AI regularly in some tasks, but not systematically", points: 3 },
-      { text: "I use AI ad hoc when I think of it", points: 2 },
-      { text: "I don't really use AI in a structured way yet", points: 1 },
-    ],
-  },
-  {
-    id: 8,
-    question: "Someone joins your team tomorrow and they're brilliant at AI. Your honest first reaction?",
-    options: [
-      { text: "I'd be the one they're learning from — I'm already ahead", points: 5 },
-      { text: "Excited — I'd finally have someone to geek out with about this", points: 4 },
-      { text: "Relieved — I could use the support, I know I'm behind", points: 3 },
-      { text: "Honestly a bit threatened — they'd probably outshine me on things I should already know", points: 2 },
-      { text: "Anxious — I wouldn't know where to start to catch up", points: 1 },
-    ],
-  },
-];
 const TIER_IMAGES = {
   "At Risk": "/images/bystander.png",
   "Operator": "/images/operator.png",
   "Navigator": "/images/navigator.png",
   "Architect": "/images/architect.png",
-  "Vanguard": "/images/leader.png",
+  "Vanguard": "/images/leader-fixed.webp",
+};
+
+// Presentation-only adjustments. These never alter or replace the original illustrations.
+// A uniform landscape frame and modest per-tier scale preserve every face and the original art.
+const TIER_IMAGE_SCALE = {
+  "At Risk": 0.86,
+  "Operator": 0.74,
+  "Navigator": 0.86,
+  "Architect": 0.86,
+  "Vanguard": 1,
 };
 
 const TIERS = [
   {
-    min: 8, max: 15,
+    min: 12, max: 23,
     label: "At Risk", emoji: "🚨",
     color: "#C0392B", lightColor: "#FDECEA", accentColor: "#E74C3C",
-    urgency: "HIGH RISK",
+    urgency: "EARLY EXPLORER",
     tagline: "AI isn't coming for your future. It's already reshaping it.",
     short: "The gap between you and someone who uses AI daily is widening every week.",
     emailTeaser: {
@@ -144,10 +65,10 @@ const TIERS = [
     },
   },
   {
-    min: 16, max: 22,
+    min: 24, max: 34,
     label: "Operator", emoji: "⚡",
     color: "#D35400", lightColor: "#FEF5E7", accentColor: "#E67E22",
-    urgency: "MODERATE RISK",
+    urgency: "BUILDING MOMENTUM",
     tagline: "You've used AI. But you're only seeing the surface.",
     short: "ChatGPT is not an AI strategy. There's a whole world beyond it you haven't touched.",
     emailTeaser: {
@@ -180,10 +101,10 @@ const TIERS = [
     },
   },
   {
-    min: 23, max: 28,
+    min: 35, max: 43,
     label: "Navigator", emoji: "🌐",
     color: "#1A6B8A", lightColor: "#EBF5FB", accentColor: "#2E86AB",
-    urgency: "LOW RISK",
+    urgency: "GROWING CONFIDENCE",
     tagline: "You know more than most. Now it's time to go deeper.",
     short: "You're in the top 25% — but the Architects are pulling away.",
     emailTeaser: {
@@ -217,7 +138,7 @@ const TIERS = [
     },
   },
   {
-    min: 29, max: 33,
+    min: 44, max: 50,
     label: "Architect", emoji: "🧠",
     color: "#4A235A", lightColor: "#F5EEF8", accentColor: "#7D3C98",
     urgency: "ADVANCED",
@@ -254,10 +175,10 @@ const TIERS = [
     },
   },
   {
-    min: 34, max: 40,
+    min: 51, max: 60,
     label: "Vanguard", emoji: "🚀",
     color: "#0E6655", lightColor: "#E8F8F5", accentColor: "#1ABC9C",
-    urgency: "PROTECTED",
+    urgency: "AI FRONTRUNNER",
     tagline: "AI isn't your threat. It's your weapon.",
     short: "You're the person others are trying to catch. Don't slow down.",
     emailTeaser: {
@@ -647,26 +568,6 @@ function getFreeResultCopy(tierLabel, audience) {
   return FREE_RESULT_COPY[tierLabel]?.[audience] || FREE_RESULT_COPY[tierLabel]?.work || FREE_RESULT_COPY["Operator"].work;
 }
 
-const SYSTEM_PROMPT = `You are a sharp, direct AI capability advisor. Write a personalised AI report. Be specific, honest, useful. Balance urgency with agency.
-
-Format EXACTLY as JSON:
-{
-  "headline": "one punchy sentence max 12 words",
-  "summary": "2-3 sentences. Direct. Reference their answer patterns.",
-  "in_practice": ["how their tier shows up in daily life 1", "example 2", "example 3"],
-  "next_level": "one sentence: what someone one tier above can do that they currently can't",
-  "threats": ["specific gap 1", "specific gap 2"],
-  "advantages": ["genuine strength 1", "genuine strength 2"],
-  "fastest_win": "one specific thing they can do this week for biggest improvement",
-  "actions": [
-    {"day": "Day 1", "action": "very specific action"},
-    {"day": "Day 3", "action": "very specific action"},
-    {"day": "Day 7", "action": "action that compounds progress"}
-  ],
-  "verdict": "one final sentence — act vs don't act"
-}
-Respond ONLY with valid JSON. No markdown, no backticks.`;
-
 export default function WhatsmyAIQ() {
   const [screen, setScreen] = useState("landing");
   const [audience, setAudience] = useState(null);
@@ -682,38 +583,63 @@ export default function WhatsmyAIQ() {
   const [email, setEmail] = useState("");
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+  const [orderState, setOrderState] = useState("verifying");
+  const [sessionId, setSessionId] = useState("");
 
-  // On mount: check if Stripe redirected back with ?paid=true
-  // If so, restore saved quiz state and generate the report
+  // A return URL is never proof of payment; only the server can verify with Stripe.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("paid") === "true") {
-      const savedAnswers = JSON.parse(sessionStorage.getItem("aiq_answers") || "[]");
-      const savedAudience = sessionStorage.getItem("aiq_audience");
-      const savedEmail = sessionStorage.getItem("aiq_email") || "";
-      if (savedAnswers.length === QUESTIONS.length && savedAudience) {
-        setAnswers(savedAnswers);
-        setAudience(savedAudience);
-        setEmail(savedEmail);
-        setEmailSubmitted(true);
-        setScreen("report");
-        // Clear the ?paid=true from URL without reloading
-        window.history.replaceState({}, "", window.location.pathname);
-        // Generate the report using saved data
-        generateReport(savedAnswers, savedAudience);
-      }
+    const id = params.get("session_id");
+    if (params.get("checkout") === "success" && id) {
+      setSessionId(id);
+      setScreen("receipt");
+      verifyOrder(id);
+    } else if (params.get("checkout") === "cancelled") {
+      try {
+        const savedAnswers = JSON.parse(sessionStorage.getItem("aiq_answers") || "[]");
+        const savedAudience = sessionStorage.getItem("aiq_audience");
+        if (savedAnswers.length === QUESTIONS.length && savedAudience) {
+          setAnswers(savedAnswers);
+          setAudience(savedAudience);
+          setEmail(sessionStorage.getItem("aiq_email") || "");
+          setEmailSubmitted(true);
+          setScreen("email");
+          setCheckoutError("Checkout was cancelled. No purchase was completed.");
+        }
+      } catch {}
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
+
+  async function verifyOrder(id) {
+    setOrderState("verifying");
+    try {
+      const response = await fetch("/api/order-status?session_id=" + encodeURIComponent(id), { cache: "no-store" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "We couldn't verify your payment");
+      setOrderState(data.paid ? data.delivery : "unpaid");
+    } catch {
+      setOrderState("error");
+    }
+  }
 
   const totalScore = answers.reduce((s, a) => s + a, 0);
   const tier = getTier(totalScore);
   const maxScore = QUESTIONS.reduce((s, q) => s + Math.max(...q.options.map(o => o.points)), 0);
-  const pct = Math.round(((totalScore - 8) / (maxScore - 8)) * 100);
+  const pct = Math.round(Math.max(0, (totalScore - QUESTIONS.length) / (maxScore - QUESTIONS.length)) * 100);
   const modules = audience ? getModules(tier, audience) : [];
   const audienceMeta = AUDIENCE_META[audience] || AUDIENCE_META.work;
   const audienceLabel = audienceMeta.labelLong;
   const freeResult = getFreeResultCopy(tier.label, audience);
   const tierImage = TIER_IMAGES[tier.label];
+  const persona = PERSONA_PROFILES[tier.label];
+  const dimensions = answers.length === QUESTIONS.length ? calculateDimensions(answers) : [];
+  const rankedDimensions = [...dimensions].sort((a,b) => b.score / b.max - a.score / a.max);
+  const strongest = rankedDimensions[0];
+  const growthArea = rankedDimensions[rankedDimensions.length - 1];
 
   useEffect(() => {
     if (screen === "email") setTimeout(() => setBarWidth(Math.max(pct, 5)), 400);
@@ -742,84 +668,60 @@ export default function WhatsmyAIQ() {
     }
   }
 
-  function submitEmail() {
-    if (!email || !email.includes("@")) { setEmailError("Enter a valid email to get your snapshot."); return; }
+  async function submitEmail() {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Enter a valid email to get your snapshot.");
+      return;
+    }
+    setEmailLoading(true);
     setEmailError("");
-    setEmailSubmitted(true);
-  }
-
-  // Save quiz state to sessionStorage, then redirect to Stripe
-  // After payment, Stripe sends user back to ?paid=true and we restore state
-  function unlockReport() {
-    sessionStorage.setItem("aiq_answers", JSON.stringify(answers));
-    sessionStorage.setItem("aiq_audience", audience || "work");
-    sessionStorage.setItem("aiq_email", email);
-    window.location.href = "https://buy.stripe.com/cNi8wQ7Vx5WD4V52Yh8g000";
-  }
-
-  // Separate function so it can be called both from button click and on redirect return
-  async function generateReport(savedAnswers, savedAudience) {
-    setReportLoading(true);
-    const answersToUse = savedAnswers || answers;
-    const audienceToUse = savedAudience || audience;
-    const audienceMetaToUse = AUDIENCE_META[audienceToUse] || AUDIENCE_META.work;
-    const audienceLabelToUse = audienceMetaToUse.labelLong;
-    const scoreToUse = answersToUse.reduce((s, a) => s + a, 0);
-    const tierToUse = getTier(scoreToUse);
-
-    const answerSummary = answersToUse.map((pts, i) => {
-      const q = QUESTIONS[i];
-      const opt = q.options.find((o) => o.points === pts);
-      return `Q${i + 1}: "${q.question}" → "${opt?.text}" (${pts} pts)`;
-    }).join("\n");
-
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/snapshot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1200,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: `Context: ${audienceLabelToUse}\nScore: ${scoreToUse}/${maxScore} — Tier: ${tierToUse.label} (${tierToUse.personality.title})\n\nAnswers:\n${answerSummary}` }],
-        }),
+        body: JSON.stringify({ email, audience, answers })
       });
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || "{}";
-      setReport(JSON.parse(raw.replace(/```json|```/g, "").trim()));
-    } catch {
-      setReport({
-        headline: "You're at the threshold. The next move matters.",
-        summary: `As a ${tierToUse.personality.title}, you're more aware than most — but the gap between awareness and systematic use is where you're losing the most time right now.`,
-        in_practice: ["You start tasks manually that AI could handle in minutes", "Your outputs are functional but not as sharp as they could be", "You know AI could help more — you just haven't built the system yet"],
-        next_level: "Someone one tier above you has AI embedded into their daily workflow — it's not an extra step, it's how they work.",
-        threats: ["Inconsistent use means inconsistent results", "The habit gap compounds — the longer you wait the bigger it grows"],
-        advantages: ["You're self-aware enough to diagnose the problem", "You're at the stage where a small push creates disproportionate results"],
-        fastest_win: "Open Module 1 below and implement one thing from it before you close this tab.",
-        actions: [
-          { day: "Day 1", action: "Complete Module 1 and implement one thing from it today" },
-          { day: "Day 3", action: "Replace one tool you currently use with an AI-powered alternative" },
-          { day: "Day 7", action: "Teach one thing you learned to someone else — it compounds your own understanding" },
-        ],
-        verdict: "Act on the modules below this week and you'll outpace 80% of your peers. Ignore them and this was just entertainment.",
-      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "We couldn't send your snapshot");
+      setEmailSubmitted(true);
+    } catch (error) {
+      setEmailError(error.message || "We couldn't send your snapshot. Please retry.");
+    } finally {
+      setEmailLoading(false);
     }
-    setReportLoading(false);
-    // Clear sessionStorage after report is generated
-    sessionStorage.removeItem("aiq_answers");
-    sessionStorage.removeItem("aiq_audience");
-    sessionStorage.removeItem("aiq_email");
+  }
+
+  async function unlockReport() {
+    setCheckoutLoading(true);
+    setCheckoutError("");
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, audience, answers })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Checkout unavailable");
+      if (!data.url || !data.url.startsWith("https://checkout.stripe.com/")) throw new Error("Invalid checkout link");
+      sessionStorage.setItem("aiq_answers", JSON.stringify(answers));
+      sessionStorage.setItem("aiq_audience", audience);
+      sessionStorage.setItem("aiq_email", email);
+      window.location.assign(data.url);
+    } catch (error) {
+      setCheckoutError(error.message || "Checkout unavailable. Please try later.");
+      setCheckoutLoading(false);
+    }
   }
 
   function reset() {
     setScreen("landing"); setCurrent(0); setAnswers([]);
     setSelected(null); setReport(null); setBarWidth(0);
     setAudience(null); setEmail(""); setEmailSubmitted(false);
-    setEmailError(""); setOpenModule(null);
+    setEmailError(""); setOpenModule(null); setCheckoutError(""); setOrderState("verifying");
   }
 
   const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);} }
     @keyframes scanline { 0%{top:-2px;}100%{top:100%;} }
@@ -839,19 +741,29 @@ export default function WhatsmyAIQ() {
     .fu6{animation:fadeUp .4s .35s ease forwards;opacity:0;}
 
     .dark-screen{background:#0D0F14;color:#E8E8F0;min-height:100vh;}
-    .light-screen{background:#FAFAF7;color:#1A1A1A;min-height:100vh;}
+    .light-screen{background:#FAFAF7;color:#172238;min-height:100vh;font-family:'DM Sans',Arial,sans-serif;-webkit-font-smoothing:auto;text-rendering:optimizeLegibility;}
+    /* Keep result text on the main rendering layer. The old fadeUp animation
+       retained a transform on every heading and scorecard, which softened glyphs
+       on some high-density displays. The portrait keeps its separate float. */
+    .light-screen .fu1,.light-screen .fu2,.light-screen .fu3,.light-screen .fu4{
+      animation:none;opacity:1;transform:none;filter:none;
+    }
 
     .audience-btn{display:flex;align-items:center;gap:14px;width:100%;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .15s;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:10px;color:#E8E8F0;}
     .audience-btn:hover{background:rgba(255,255,255,.055);border-color:rgba(0,212,255,.35);transform:translateX(4px);}
 
     .opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 17px;margin-bottom:8px;color:rgba(215,215,230,.62);font-size:.91rem;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1.4;}
-    .opt:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:#fff;transform:translateX(3px);}
-    .opt.sel{background:rgba(0,212,255,.09);border-color:rgba(0,212,255,.42);color:#FF5555;}
+    .opt:hover{background:rgba(255,255,255,.06);border-color:rgba(0,212,255,.6);color:#fff;}
+    .opt.sel{background:rgba(0,212,255,.13);border-color:#00D4FF;color:#FFFFFF;box-shadow:inset 3px 0 0 #00D4FF;}
 
     .next-dark{width:100%;padding:14px;border-radius:8px;border:none;font-weight:800;font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;margin-top:5px;cursor:pointer;transition:all .15s;}
     .next-dark.on{background:#00D4FF;color:#fff;}
     .next-dark.on:hover{background:#00AACC;transform:translateY(-1px);}
-    .next-dark.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.16);cursor:not-allowed;}
+    .next-dark.off{background:rgba(255,255,255,.04);color:rgba(255,255,255,.34);cursor:pointer;}
+    /* Same pointer and focus behavior across quiz answers and navigation.
+       Avoid text-selection cursors when moving across an option's text. */
+    .opt,.opt *, .next-dark,.next-dark *{cursor:pointer!important;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
+    .opt:focus-visible,.next-dark:focus-visible{outline:3px solid #72E9F9;outline-offset:3px;}
 
     .cta-dark{background:#00D4FF;color:#fff;border:none;border-radius:8px;padding:16px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
     .cta-dark:hover{background:#00AACC;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,.35);}
@@ -873,7 +785,8 @@ export default function WhatsmyAIQ() {
     .glitch.active::after{opacity:.55;animation:glitch1 .15s steps(1) forwards;}
 
     .tier-avatar{animation:avatarIn .7s cubic-bezier(0.175,0.885,0.32,1.275) forwards;width:100%;border-radius:16px;object-fit:cover;display:block;}
-    .tier-avatar-float{animation:avatarIn .7s cubic-bezier(0.175,0.885,0.32,1.275) forwards, float 4s 0.7s ease-in-out infinite;}
+    .tier-avatar-float{animation:float 4.6s ease-in-out infinite;will-change:transform;}
+    @media (prefers-reduced-motion:reduce){.tier-avatar-float{animation:none}.tier-avatar{animation:none}}
 
     .lcard{background:#fff;border:1px solid #EBEBEB;border-radius:14px;padding:22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
     .lslabel{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;font-family:'DM Sans',sans-serif;font-weight:700;}
@@ -929,7 +842,7 @@ export default function WhatsmyAIQ() {
               <div className="ticker-inner">{[...tickers,...tickers].map((t,i)=><span key={i} className="t-item">{t} <span style={{color:"rgba(0,212,255,.3)"}}>◆</span></span>)}</div>
             </div>
             <div className="fu4" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px",marginBottom:"28px"}}>
-              {[{num:"8",label:"Questions"},{num:"2 MIN",label:"To complete"},{num:"FREE",label:"To start"}].map(s=>(
+              {[{num:String(QUESTIONS.length),label:"Questions"},{num:"3 MIN",label:"To complete"},{num:"FREE",label:"To start"}].map(s=>(
                 <div key={s.label} className="sbox">
                   <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.45rem",fontWeight:900,color:"#fff"}}>{s.num}</div>
                   <div style={{fontSize:".7rem",color:"rgba(255,255,255,.28)",textTransform:"uppercase",letterSpacing:".07em",marginTop:"2px"}}>{s.label}</div>
@@ -938,7 +851,7 @@ export default function WhatsmyAIQ() {
             </div>
             <div className="fu5" style={{display:"flex",flexDirection:"column",alignItems:"stretch",gap:"9px"}}>
               <button className="cta-dark" style={{width:"100%"}} onClick={()=>setScreen("audience")}>Discover Your AIQ →</button>
-              <p style={{textAlign:"center",fontSize:".74rem",color:"rgba(255,255,255,.2)"}}>Takes 2 minutes · Free · No signup required</p>
+              <p style={{textAlign:"center",fontSize:".74rem",color:"rgba(255,255,255,.2)"}}>Takes about 3 minutes · Free to start · Email for your personal profile</p>
             </div>
           </div>
         </div>
@@ -972,7 +885,7 @@ export default function WhatsmyAIQ() {
             <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#E8E8F0"}}>WHAT'S MY <span style={{color:"#00D4FF"}}>AIQ</span></div>
             <div style={{fontSize:".68rem",color:"rgba(0,212,255,.5)",letterSpacing:".08em",textTransform:"uppercase"}}>AIQ Assessment</div>
           </div>
-          <div style={{maxWidth:"580px",margin:"0 auto",padding:"28px 20px 60px",transition:"opacity .2s,transform .2s",opacity:animIn?1:0,transform:animIn?"translateY(0)":"translateY(10px)"}}>
+          <div style={{maxWidth:"580px",margin:"0 auto",padding:"28px 20px 60px",transition:"opacity .16s",opacity:animIn?1:0}}>
             <div style={{display:"flex",gap:"4px",marginBottom:"5px"}}>
               {QUESTIONS.map((_,i)=><div key={i} style={{flex:1,height:"3px",borderRadius:"2px",background:i<current?"#00D4FF":i===current?"rgba(0,212,255,.38)":"rgba(255,255,255,.06)",transition:"background .3s"}}/>)}
             </div>
@@ -994,11 +907,13 @@ export default function WhatsmyAIQ() {
           </div>
           <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
 
-            {/* Hero image */}
-            <div className="fu1" style={{marginBottom:"24px",borderRadius:"16px",overflow:"hidden",maxHeight:"380px"}}>
-              <img src={tierImage} alt={tier.personality.title} className="tier-avatar-float" style={{width:"100%",maxHeight:"380px",objectFit:"cover",objectPosition:"center",borderRadius:"16px"}}/>
+            {/* Identical landscape frame for all tiers. Original image files are untouched.
+                Scale is CSS-only, so Operator isn't oversized and faces stay fully visible. */}
+            <div className="fu1" style={{marginBottom:"22px",padding:"6px 0 8px"}}>
+              <div className="tier-avatar-float" style={{position:"relative",width:"100%",aspectRatio:"1000 / 560",borderRadius:"16px",overflow:"hidden",background:`linear-gradient(125deg, ${tier.lightColor} 0%, #FFFFFF 52%, ${tier.lightColor} 100%)`,border:`1px solid ${tier.accentColor}35`,boxShadow:`0 12px 34px ${tier.accentColor}1D`}}>
+                <img src={tierImage} alt={tier.personality.title} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",objectPosition:"center center",transform:`scale(${TIER_IMAGE_SCALE[tier.label] ?? 1})`,transformOrigin:"center center",display:"block"}}/>
+              </div>
             </div>
-maxHeight:"420px"
             <div className="fu1" style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"4px 13px",fontSize:".68rem",letterSpacing:".13em",textTransform:"uppercase",color:tier.color,marginBottom:"12px",fontWeight:700}}>{tier.urgency}</div>
 
             <h2 className="fu2" style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"clamp(2rem,6vw,3rem)",color:tier.color,textTransform:"uppercase",letterSpacing:".02em",lineHeight:1,marginBottom:"4px"}}>
@@ -1011,215 +926,95 @@ maxHeight:"420px"
             </div>
             <p className="fu3" style={{fontSize:".75rem",color:"#BDBDBD",marginBottom:"24px",textAlign:"right"}}>Score: {totalScore}/{maxScore}</p>
 
-            <div className="fu3 result-stack">
-              <div className="result-card">
-                <p className="result-card-title">What this means for you</p>
-                {freeResult.means.map((paragraph) => (
-                  <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+            <div className="fu3" style={{background:`linear-gradient(135deg, ${tier.color}, #121827)`,color:"#fff",borderRadius:"18px",padding:"22px",marginBottom:"18px",border:`1px solid ${tier.accentColor}55`,boxShadow:`0 12px 24px ${tier.accentColor}18`}}>
+              <div style={{fontSize:".69rem",letterSpacing:".14em",textTransform:"uppercase",color:tier.lightColor,fontWeight:800,marginBottom:"10px"}}>Your AIQ personality · First look</div>
+              <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.5rem",fontWeight:900,letterSpacing:".03em",marginBottom:"10px"}}>{tier.personality.title}</div>
+              <p style={{fontSize:".9rem",lineHeight:1.7,color:"#DDE3EC",marginBottom:"8px"}}>{persona.nudge}</p>
+              <p style={{fontSize:".78rem",color:"#E4E8ED"}}>Your self-reported answers point to a bigger pattern. Your email explains what it means for you.</p>
+            </div>
 
-              <div className="result-card">
-                <p className="result-card-title">What you're missing out on</p>
-                <ul className="result-list">
-                  {freeResult.missing.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="result-card">
-                <p className="result-card-title">Your next level</p>
-                {freeResult.next.map((paragraph) => (
-                  <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>
-                    {paragraph}
-                  </p>
-                ))}
-                <p className="result-note">
-                  Your full gap analysis, learning path, and 7-day action plan go much deeper than this. Get your free snapshot first.
-                </p>
+            <div className="fu3" style={{background:"#fff",border:`1.5px solid ${tier.accentColor}50`,borderRadius:"16px",padding:"20px",marginBottom:"18px",boxShadow:`0 5px 22px ${tier.accentColor}10`}}>
+              <div style={{fontSize:".68rem",color:tier.color,textTransform:"uppercase",letterSpacing:".12em",fontWeight:800,marginBottom:"6px"}}>Your AIQ DNA</div>
+              <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.65rem",fontWeight:900,color:"#101827",marginBottom:"7px",lineHeight:1.2}}>Four signals. One bigger picture.</h3>
+              <p style={{fontSize:".88rem",lineHeight:1.65,color:"#42526A",marginBottom:"20px"}}>These are self-reported readiness indicators, not a formal ability test. Discover how they connect in your personalised email.</p>
+              {dimensions.map((dim) => (
+                <div key={dim.id} style={{marginBottom:"15px"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:"10px",marginBottom:"6px",alignItems:"center"}}>
+                    <span style={{fontSize:".93rem",fontWeight:700,color:"#1C293A"}}>{dim.label}</span>
+                    <span style={{fontSize:".94rem",fontWeight:800,color:tier.color,fontVariantNumeric:"tabular-nums"}}>{dim.score}/{dim.max}</span>
+                  </div>
+                  <div style={{height:"8px",background:"#ECF0F6",borderRadius:"8px",overflow:"hidden"}}>
+                    <div style={{width:`${100*dim.score/dim.max}%`,height:"100%",background:`linear-gradient(90deg, ${tier.color}, ${tier.accentColor})`,borderRadius:"8px"}}/>
+                  </div>
+                </div>
+              ))}
+              <div style={{borderTop:"1px solid #E9ECF2",paddingTop:"14px",display:"flex",flexWrap:"wrap",gap:"12px",justifyContent:"space-between"}}>
+                <div><div style={{fontSize:".74rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".07em",color:"#536780"}}>Leading signal</div><div style={{fontSize:".96rem",fontWeight:700,color:"#16202B",lineHeight:1.45}}>{strongest?.label}</div></div>
+                <div><div style={{fontSize:".74rem",fontWeight:800,textTransform:"uppercase",letterSpacing:".07em",color:"#536780"}}>Room to grow</div><div style={{fontSize:".96rem",fontWeight:700,color:"#16202B",lineHeight:1.45}}>{growthArea?.label}</div></div>
               </div>
             </div>
 
             {!emailSubmitted ? (
               <div className="fu4">
-                <p style={{fontSize:".82rem",color:"#666",marginBottom:"10px"}}>Where should we send your free AIQ snapshot?</p>
+                <p style={{fontSize:".82rem",color:"#666",marginBottom:"10px"}}>Get the story behind your score—your personality profile, what each signal means, your strongest area and a practical next step. Free, straight to your inbox.</p>
                 <input className="email-input" type="email" placeholder="your@email.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitEmail()}/>
                 {emailError&&<p style={{fontSize:".78rem",color:"#E74C3C",marginBottom:"8px"}}>{emailError}</p>}
-                <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={submitEmail}>Send My Free Snapshot →</button>
-                <p style={{textAlign:"center",fontSize:".72rem",color:"#BDBDBD",marginTop:"8px"}}>No spam. One snapshot email. Unsubscribe anytime.</p>
+                <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={submitEmail} disabled={emailLoading}>{emailLoading?"Preparing Your Profile…":"Email My Personal AIQ Profile →"}</button>
+                <p style={{textAlign:"center",fontSize:".72rem",color:"#BDBDBD",marginTop:"8px"}}>One assessment email. No marketing subscription.</p>
               </div>
             ) : (
               <div className="fu4">
-                <div style={{background:"#F0FFF6",border:"1.5px solid #A8E6C4",borderRadius:"14px",padding:"16px 20px",marginBottom:"16px"}}>
-                  <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.05rem",color:"#27AE60",marginBottom:"4px",textTransform:"uppercase",letterSpacing:".03em"}}>✓ Snapshot on its way to {email}</p>
-                  <p style={{fontSize:".83rem",color:"#555",lineHeight:1.5}}>Check your inbox in a few minutes. Ready to see the full picture now?</p>
+                <div style={{background:tier.lightColor,border:`1.5px solid ${tier.accentColor}75`,borderRadius:"14px",padding:"16px 20px",marginBottom:"16px"}}>
+                  <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:"1.05rem",color:tier.color,marginBottom:"4px",textTransform:"uppercase",letterSpacing:".03em"}}>✓ Your AIQ profile is on its way to {email}</p>
+                  <p style={{fontSize:".83rem",color:"#555",lineHeight:1.5}}>Check your inbox for your personality breakdown and tailored starting point. For a deeper diagnosis, the full report goes further.</p>
                 </div>
-                <div style={{background:"#fff",border:"1.5px solid #EBEBEB",borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:"0 1px 4px rgba(0,0,0,.04)"}}>
-                  <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"10px",fontWeight:600}}>Your full report includes:</p>
-                  {[`Your ${tier.personality.title} profile — what it means in your ${audienceLabel} context`,"Your exact capability gaps with specific examples","What someone one tier above you can do that you currently can't","Your fastest win this week","3 learning modules sequenced for your level and path","A 7-day action plan built for you"].map(item=>(
+                <div style={{background:"#fff",border:`1.5px solid ${tier.accentColor}60`,borderRadius:"14px",padding:"20px",marginBottom:"14px",boxShadow:`0 7px 24px ${tier.accentColor}13`}}>
+                  <p style={{fontSize:".7rem",letterSpacing:".1em",textTransform:"uppercase",color:tier.color,marginBottom:"7px",fontWeight:800}}>BEYOND YOUR SCORE · $24.99</p>
+                  <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.5rem",lineHeight:1.15,color:"#172238",marginBottom:"9px"}}>Turn your AIQ into a plan.</h3>
+                  <p style={{fontSize:".84rem",color:"#5F6C78",lineHeight:1.6,marginBottom:"14px"}}>Your free profile highlights your patterns. Your deep dive turns them into practical steps—starting with {growthArea?.label?.toLowerCase() || "your next opportunity"}.</p>
+                  {[`Deep-dive into four AIQ dimensions in your ${audienceLabel} context`,"Evidence-based interpretation of your answers","Three relevant AI use cases and capability gaps","Your fastest practical win this week","A 7-day action plan and 30-day growth roadmap","Recommended learning areas to reach the next level"].map(item=>(
                     <div key={item} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"6px 0",borderBottom:"1px solid #F5F5F5",fontSize:".83rem",color:"#555"}}>
                       <span style={{color:tier.accentColor,fontWeight:700,flexShrink:0}}>→</span>{item}
                     </div>
                   ))}
                   <div style={{marginTop:"16px"}}>
                     <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"2.2rem",fontWeight:900,color:"#1A1A1A"}}>$24.99</div>
-                    <div style={{fontSize:".72rem",color:"#BDBDBD",marginBottom:"12px"}}>One-time · Instant access · No subscription</div>
-                    <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={unlockReport}>Unlock My Full Report →</button>
+                    <div style={{fontSize:".72rem",color:"#BDBDBD",marginBottom:"12px"}}>One-time purchase · Personalised email delivery · No subscription</div>
+                    <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={unlockReport} disabled={checkoutLoading}>{checkoutLoading?"Opening Secure Checkout…":"Unlock My Full Report →"}</button>
                   </div>
                 </div>
-                <p style={{textAlign:"center",fontSize:".7rem",color:"#BDBDBD"}}>🔒 Secure · Instant delivery · 7-day guarantee</p>
+                {checkoutError && <p role="alert" style={{color:"#B42318",fontSize:".84rem",marginBottom:"12px"}}>{checkoutError}</p>}
+                <p style={{textAlign:"center",fontSize:".7rem",color:"#BDBDBD"}}>🔒 Secure checkout · Paid reports are delivered by email</p>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {screen === "report" && (
+      {screen === "receipt" && (
         <div className="light-screen">
-          <div style={{padding:"16px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid #EBEBEB",background:"#fff"}}>
-            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.1rem",letterSpacing:".04em",color:"#1A1A1A"}}>WHAT'S MY <span style={{color:tier.accentColor}}>AIQ</span></div>
-            <div style={{fontSize:".68rem",color:"#BDBDBD",letterSpacing:".08em",textTransform:"uppercase"}}>whatsmyaiq.online</div>
-          </div>
-          <div style={{maxWidth:"580px",margin:"0 auto",padding:"32px 20px 60px"}}>
-            {reportLoading ? (
-              <div style={{textAlign:"center",paddingTop:"60px"}}>
-                <img src={tierImage} alt={tier.personality.title} style={{width:"120px",height:"120px",objectFit:"cover",objectPosition:"top",borderRadius:"12px",margin:"0 auto 20px",display:"block"}}/>
-                <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.35rem",fontWeight:800,color:"#1A1A1A",textTransform:"uppercase",letterSpacing:".05em",marginBottom:"7px"}}>Building Your Report</div>
-                <p style={{fontSize:".8rem",color:"#888",marginBottom:"4px"}}>Generating your personalised AI-Proof report...</p>
-                <div className="lb"><div className="lb-inner" style={{background:tier.accentColor}}/></div>
-                <p style={{fontSize:".7rem",color:"#BDBDBD",letterSpacing:".08em",textTransform:"uppercase"}}>Analysing {QUESTIONS.length} answers · {audienceLabel} context</p>
-              </div>
-            ) : report ? (
-              <>
-                <div style={{display:"flex",alignItems:"flex-start",gap:"20px",marginBottom:"24px"}}>
-                  <img src={tierImage} alt={tier.personality.title} className="tier-avatar" style={{width:"110px",height:"130px",objectFit:"cover",objectPosition:"top",borderRadius:"12px",flexShrink:0}}/>
-                  <div>
-                    <div style={{display:"inline-block",background:tier.lightColor,border:`1.5px solid ${tier.accentColor}40`,borderRadius:"6px",padding:"3px 10px",fontSize:".65rem",letterSpacing:".12em",textTransform:"uppercase",color:tier.color,marginBottom:"8px",fontWeight:700}}>{tier.urgency} · {tier.label}</div>
-                    <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"clamp(1.3rem,4vw,1.8rem)",color:"#1A1A1A",textTransform:"uppercase",lineHeight:1.1}}>{report.headline}</h2>
-                    <p style={{fontSize:".78rem",color:"#888",marginTop:"4px",fontStyle:"italic"}}>{tier.personality.title} · {audienceLabel}</p>
-                  </div>
-                </div>
-
-                <div className="result-stack" style={{marginBottom:"16px"}}>
-                  <div className="result-card">
-                    <p className="result-card-title" style={{color:tier.color}}>What this means for you</p>
-                    {freeResult.means.map((paragraph) => (
-                      <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>{paragraph}</p>
-                    ))}
-                  </div>
-                  <div className="result-card">
-                    <p className="result-card-title" style={{color:tier.color}}>What you're missing out on</p>
-                    <ul className="result-list">
-                      {freeResult.missing.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="result-card">
-                    <p className="result-card-title" style={{color:tier.color}}>Your next level</p>
-                    {freeResult.next.map((paragraph) => (
-                      <p key={paragraph} className="result-card-copy" style={{marginBottom:"10px"}}>{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="lcard">
-                  <p className="lslabel" style={{color:tier.color}}>📊 Your Situation</p>
-                  <p style={{fontSize:".91rem",color:"#444",lineHeight:1.65}}>{report.summary}</p>
-                </div>
-
-                <div className="lcard">
-                  <p className="lslabel" style={{color:tier.color}}>🪞 Your AI Profile: {tier.personality.title}</p>
-                  <p style={{fontSize:".87rem",color:"#555",lineHeight:1.6,marginBottom:"12px"}}>{tier.personality.description}</p>
-                  <p style={{fontSize:".65rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"8px",fontWeight:600}}>In practice, this looks like:</p>
-                  {report.in_practice?.map(item=>(
-                    <div key={item} className="gap-item">
-                      <span style={{color:tier.accentColor,flexShrink:0,marginTop:"1px"}}>◆</span>{item}
-                    </div>
-                  ))}
-                  {report.next_level&&(
-                    <div style={{marginTop:"12px",paddingTop:"12px",borderTop:"1px solid #F5F5F5"}}>
-                      <p style={{fontSize:".65rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"6px",fontWeight:600}}>One tier above you:</p>
-                      <p style={{fontSize:".87rem",color:"#666",lineHeight:1.5,fontStyle:"italic"}}>{report.next_level}</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="lcard">
-                  <p className="lslabel" style={{color:"#C0392B"}}>🚨 Your Gaps Right Now</p>
-                  {report.threats?.map(t=><span key={t} className="lpill-r" style={{background:"#FEF5F5",color:"#C0392B",border:"1px solid #FFCCCC"}}>{t}</span>)}
-                </div>
-
-                <div className="lcard">
-                  <p className="lslabel" style={{color:"#27AE60"}}>✅ What You Have Going For You</p>
-                  {report.advantages?.map(a=><span key={a} className="lpill-g" style={{background:"#F0FFF6",color:"#27AE60",border:"1px solid #A8E6C4"}}>{a}</span>)}
-                </div>
-
-                {report.fastest_win&&(
-                  <div style={{background:tier.lightColor,border:`1.5px solid ${tier.accentColor}30`,borderRadius:"14px",padding:"16px 18px",marginBottom:"14px"}}>
-                    <p style={{fontSize:".65rem",letterSpacing:".12em",textTransform:"uppercase",color:tier.color,marginBottom:"7px",fontWeight:700}}>⚡ Your Fastest Win This Week</p>
-                    <p style={{fontSize:".9rem",color:"#1A1A1A",lineHeight:1.5,fontWeight:500}}>{report.fastest_win}</p>
-                  </div>
-                )}
-
-                <div className="lcard">
-                  <p className="lslabel" style={{color:tier.color}}>📅 Your 7-Day Action Plan</p>
-                  {report.actions?.map(a=>(
-                    <div key={a.day} style={{display:"flex",gap:"13px",alignItems:"flex-start",marginBottom:"12px"}}>
-                      <span style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:".82rem",color:tier.accentColor,minWidth:"48px",paddingTop:"1px",textTransform:"uppercase",letterSpacing:".04em"}}>{a.day}</span>
-                      <span style={{fontSize:".87rem",color:"#444",lineHeight:1.5}}>{a.action}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="lcard" style={{background:"#FAFAF7"}}>
-                  <p className="lslabel" style={{color:tier.color}}>📚 Your Learning Path</p>
-                  <p style={{fontSize:".8rem",color:"#888",marginBottom:"14px",lineHeight:1.5}}>3 modules sequenced for your level. Follow them in order — each builds on the last.</p>
-                  {modules.map((mod,idx)=>(
-                    <div key={mod.title} className="module-wrap">
-                      <button className={`module-btn${openModule===idx?" open":""}`} onClick={()=>setOpenModule(openModule===idx?null:idx)}>
-                        <div style={{flex:1}}>
-                          <div style={{marginBottom:"5px"}}>
-                            <span className="step-badge" style={{background:tier.lightColor,color:tier.color,border:`1px solid ${tier.accentColor}30`}}>{mod.step}</span>
-                            <span style={{fontSize:".62rem",letterSpacing:".1em",textTransform:"uppercase",color:tier.accentColor,fontWeight:700}}>{mod.tag}</span>
-                          </div>
-                          <div style={{fontSize:".88rem",color:"#1A1A1A",fontWeight:600,lineHeight:1.3}}>{mod.title}</div>
-                          <div style={{fontSize:".76rem",color:"#888",marginTop:"4px"}}>🎯 {mod.outcome}</div>
-                        </div>
-                        <div style={{color:"#BDBDBD",fontSize:"1rem",marginLeft:"12px",flexShrink:0,marginTop:"2px"}}>{openModule===idx?"↑":"↓"}</div>
-                      </button>
-                      {openModule===idx&&(
-                        <div className="module-body">
-                          <p style={{fontSize:".86rem",color:"#555",lineHeight:1.65,marginBottom:"12px"}}>{mod.content}</p>
-                          <p style={{fontSize:".65rem",letterSpacing:".1em",textTransform:"uppercase",color:"#BDBDBD",marginBottom:"7px",fontWeight:600}}>Key Takeaways</p>
-                          {mod.takeaways.map(t=>(
-                            <div key={t} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"5px 0",fontSize:".82rem",color:"#555",lineHeight:1.4}}>
-                              <span style={{color:tier.accentColor,flexShrink:0,marginTop:"1px"}}>→</span>{t}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{background:tier.lightColor,border:`1.5px solid ${tier.accentColor}30`,borderRadius:"14px",padding:"20px",marginBottom:"16px",textAlign:"center"}}>
-                  <p style={{fontSize:".65rem",letterSpacing:".12em",textTransform:"uppercase",color:tier.color,marginBottom:"8px",fontWeight:700}}>Your Verdict</p>
-                  <p style={{fontSize:".97rem",color:"#1A1A1A",lineHeight:1.6,fontStyle:"italic",fontWeight:500}}>"{report.verdict}"</p>
-                </div>
-
-                <div style={{display:"flex",flexDirection:"column",gap:"9px"}}>
-                  <button className="cta-light" style={{width:"100%",background:tier.accentColor}} onClick={reset}>Share With a Friend →</button>
-                  <p style={{textAlign:"center",fontSize:".72rem",color:"#BDBDBD"}}>whatsmyaiq.online</p>
-                </div>
-              </>
-            ) : null}
+          <div style={{maxWidth:"620px",margin:"0 auto",padding:"80px 24px",textAlign:"center"}}>
+            <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.3rem",marginBottom:"24px"}}>WHAT'S MY AIQ</div>
+            <h1 style={{fontSize:"clamp(1.7rem,4vw,2.5rem)",fontWeight:800,color:"#17202a",marginBottom:"16px"}}>
+              {orderState === "verifying" ? "Checking Your Payment" :
+               orderState === "sent" ? "Your Report Has Been Sent" :
+               orderState === "pending" ? "Payment Confirmed" :
+               orderState === "unpaid" ? "Payment Not Yet Confirmed" : "We Couldn't Check Your Payment"}
+            </h1>
+            <p style={{color:"#555",lineHeight:1.65,fontSize:"1rem",marginBottom:"28px"}}>
+              {orderState === "verifying" ? "Confirming your payment directly with Stripe." :
+               orderState === "sent" ? "Your personalised AI readiness report has been passed to our email provider. Check your inbox and spam folder." :
+               orderState === "pending" ? "Your purchase is confirmed. We're preparing your personalised report and will send it to the email used at checkout." :
+               orderState === "unpaid" ? "Stripe has not confirmed a completed payment. If you just paid, please check again." :
+               "Your payment status is currently unavailable. Please check again; do not pay a second time."}
+            </p>
+            {(orderState === "pending" || orderState === "verifying" || orderState === "error" || orderState === "unpaid") &&
+              <button className="cta-light" style={{background:"#00D4FF"}} onClick={() => verifyOrder(sessionId)}>Check Status Again</button>}
+            <p style={{fontSize:".76rem",color:"#8a8a8a",marginTop:"24px"}}>Your report is fulfilled using Stripe's confirmed payment record, even if you close this page.</p>
           </div>
         </div>
       )}
+
     </>
   );
 }
